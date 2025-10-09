@@ -88,42 +88,40 @@ export default function ProductPageTemplate({ productData }) {
               </div>
             </div>
             
-            {/* Right Column - Visual Design Mockup */}
+            {/* Right Column - Product Visuals Gallery */}
             <div className="relative animate-float">
-              <div className={`bg-gradient-to-br ${colorClass}/20 to-accent/20 rounded-2xl p-8 border ${colorClass}/20 shadow-2xl hover:shadow-3xl transition-shadow duration-500`}>
-                <div className="bg-card rounded-lg p-6 shadow-2xl transform hover:scale-105 transition-transform duration-500">
-                  {/* Window Controls */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-100"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-200"></div>
+              <div className={`bg-gradient-to-br ${colorClass}/20 to-accent/20 rounded-2xl p-4 border ${colorClass}/20 shadow-2xl hover:shadow-3xl transition-shadow duration-500`}>
+                {/* Main Featured Image */}
+                <div className="bg-card rounded-lg overflow-hidden shadow-2xl mb-4">
+                  <img 
+                    src={productData.images[0]} 
+                    alt={`${productData.name} Interface`}
+                    className="w-full h-auto transform hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                
+                {/* Thumbnail Gallery */}
+                <div className="grid grid-cols-2 gap-4">
+                  {productData.images.slice(1).map((image, index) => (
+                    <div 
+                      key={index}
+                      className="bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer group"
+                    >
+                      <img 
+                        src={image} 
+                        alt={`${productData.name} Feature ${index + 2}`}
+                        className="w-full h-auto transform group-hover:scale-110 transition-transform duration-500"
+                      />
                     </div>
-                    <div className="text-xs text-muted-foreground">{productData.name}</div>
-                  </div>
-                  
-                  {/* Dynamic Interface Preview */}
-                  <div className="space-y-3">
-                    {productData.mockupLines.map((width, index) => (
-                      <div 
-                        key={index}
-                        className={`h-4 rounded transition-all duration-500 ${
-                          index === activeFeature 
-                            ? `${colorClass}/40 animate-pulse` 
-                            : 'bg-foreground/10'
-                        }`}
-                        style={{ width }}
-                      ></div>
-                    ))}
-                  </div>
-                  
-                  {/* AI Indicator */}
-                  <div className="mt-6 flex items-center space-x-2">
-                    <Sparkles className={`h-4 w-4 ${colorClass} animate-spin-slow`} />
-                    <span className={`text-xs ${colorClass} animate-pulse`}>
-                      {productData.aiIndicator}
-                    </span>
-                  </div>
+                  ))}
+                </div>
+                
+                {/* AI Indicator */}
+                <div className="mt-6 flex items-center space-x-2">
+                  <Sparkles className={`h-4 w-4 ${colorClass} animate-spin-slow`} />
+                  <span className={`text-xs ${colorClass} animate-pulse`}>
+                    {productData.aiIndicator}
+                  </span>
                 </div>
               </div>
               

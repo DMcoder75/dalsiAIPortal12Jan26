@@ -37,6 +37,16 @@ export const writerProData = {
     { value: '99%', label: 'Accuracy' }
   ],
   mockupLines: ['100%', '85%', '65%', '100%', '45%'],
+  images: [
+    '/src/assets/products/writer-pro-1.png',
+    '/src/assets/products/writer-pro-2.png',
+    '/src/assets/products/writer-pro-3.png'
+  ],
+  images: [
+    '/src/assets/products/writer-pro-1.png',
+    '/src/assets/products/writer-pro-2.png',
+    '/src/assets/products/writer-pro-3.png'
+  ],
   features: [
     { icon: Sparkles, title: 'AI-Powered Writing', description: 'Generate high-quality content in seconds with advanced language models' },
     { icon: BookOpen, title: 'Multiple Formats', description: 'Blogs, articles, stories, scripts, and more - all in one platform' },
@@ -85,6 +95,16 @@ export const codeGeniusData = {
     { value: '99.9%', label: 'Accuracy' }
   ],
   mockupLines: ['100%', '90%', '75%', '100%', '60%'],
+  images: [
+    '/src/assets/products/code-genius-1.png',
+    '/src/assets/products/code-genius-2.png',
+    '/src/assets/products/code-genius-3.png'
+  ],
+  images: [
+    '/src/assets/products/code-genius-1.png',
+    '/src/assets/products/code-genius-2.png',
+    '/src/assets/products/code-genius-3.png'
+  ],
   features: [
     { icon: Code, title: 'Code Generation', description: 'Generate functions, classes, and entire modules from descriptions' },
     { icon: Search, title: 'Intelligent Debugging', description: 'AI-powered bug detection and fix suggestions' },
@@ -133,6 +153,16 @@ export const businessSuiteData = {
     { value: '24/7', label: 'Support' }
   ],
   mockupLines: ['100%', '95%', '80%', '100%', '70%'],
+  images: [
+    '/src/assets/products/business-suite-1.png',
+    '/src/assets/products/business-suite-2.png',
+    '/src/assets/products/business-suite-3.png'
+  ],
+  images: [
+    '/src/assets/products/business-suite-1.png',
+    '/src/assets/products/business-suite-2.png',
+    '/src/assets/products/business-suite-3.png'
+  ],
   features: [
     { icon: Briefcase, title: 'Business Templates', description: '500+ professional templates for every business need' },
     { icon: FileText, title: 'Report Generation', description: 'Create comprehensive business reports automatically' },
@@ -181,6 +211,16 @@ export const researcherData = {
     { value: '100%', label: 'Accurate Citations' }
   ],
   mockupLines: ['100%', '88%', '72%', '100%', '55%'],
+  images: [
+    '/src/assets/products/researcher-1.png',
+    '/src/assets/products/researcher-2.png',
+    '/src/assets/products/researcher-3.png'
+  ],
+  images: [
+    '/src/assets/products/researcher-1.png',
+    '/src/assets/products/researcher-2.png',
+    '/src/assets/products/researcher-3.png'
+  ],
   features: [
     { icon: Search, title: 'Smart Literature Review', description: 'Find relevant papers and research instantly' },
     { icon: FileText, title: 'Auto Citations', description: 'Generate citations in any format automatically' },
@@ -229,6 +269,16 @@ export const chatbotBuilderData = {
     { value: '95%', label: 'Satisfaction' }
   ],
   mockupLines: ['100%', '92%', '78%', '100%', '65%'],
+  images: [
+    '/src/assets/products/chatbot-builder-1.png',
+    '/src/assets/products/chatbot-builder-2.png',
+    '/src/assets/products/chatbot-builder-3.png'
+  ],
+  images: [
+    '/src/assets/products/chatbot-builder-1.png',
+    '/src/assets/products/chatbot-builder-2.png',
+    '/src/assets/products/chatbot-builder-3.png'
+  ],
   features: [
     { icon: Bot, title: 'Drag & Drop Builder', description: 'Create chatbots visually without any coding' },
     { icon: Sparkles, title: 'Natural Language', description: 'Understand and respond naturally to users' },
@@ -281,6 +331,16 @@ export const visionScanData = {
     { value: '100+', label: 'Languages' }
   ],
   mockupLines: ['100%', '87%', '70%', '100%', '50%'],
+  images: [
+    '/src/assets/products/vision-scan-1.png',
+    '/src/assets/products/vision-scan-2.png',
+    '/src/assets/products/vision-scan-3.png'
+  ],
+  images: [
+    '/src/assets/products/vision-scan-1.png',
+    '/src/assets/products/vision-scan-2.png',
+    '/src/assets/products/vision-scan-3.png'
+  ],
   features: [
     { icon: ScanLine, title: 'Advanced OCR', description: '99.9% accuracy in text extraction from any document' },
     { icon: FileText, title: 'Data Extraction', description: 'Automatically extract key information and data points' },
@@ -329,6 +389,16 @@ export const medVisionData = {
     { value: '50K+', label: 'Scans Daily' }
   ],
   mockupLines: ['100%', '90%', '75%', '100%', '60%'],
+  images: [
+    '/src/assets/products/medvision-1.png',
+    '/src/assets/products/medvision-2.png',
+    '/src/assets/products/medvision-3.png'
+  ],
+  images: [
+    '/src/assets/products/medvision-1.png',
+    '/src/assets/products/medvision-2.png',
+    '/src/assets/products/medvision-3.png'
+  ],
   features: [
     { icon: Stethoscope, title: 'Multi-modality Support', description: 'X-ray, MRI, CT, ultrasound, and more' },
     { icon: Search, title: 'Anomaly Detection', description: 'Identify potential issues with high accuracy' },
@@ -377,6 +447,16 @@ export const artStudioData = {
     { value: '<30s', label: 'Generation Time' }
   ],
   mockupLines: ['100%', '85%', '68%', '100%', '52%'],
+  images: [
+    '/src/assets/products/art-studio-1.png',
+    '/src/assets/products/art-studio-2.png',
+    '/src/assets/products/art-studio-3.png'
+  ],
+  images: [
+    '/src/assets/products/art-studio-1.png',
+    '/src/assets/products/art-studio-2.png',
+    '/src/assets/products/art-studio-3.png'
+  ],
   features: [
     { icon: Palette, title: 'Text-to-Image', description: 'Create images from detailed text descriptions' },
     { icon: Sparkles, title: '100+ Art Styles', description: 'From photorealistic to anime, abstract to oil painting' },
@@ -425,6 +505,16 @@ export const inspectorData = {
     { value: '24/7', label: 'Operation' }
   ],
   mockupLines: ['100%', '93%', '80%', '100%', '68%'],
+  images: [
+    '/src/assets/products/inspector-1.png',
+    '/src/assets/products/inspector-2.png',
+    '/src/assets/products/inspector-3.png'
+  ],
+  images: [
+    '/src/assets/products/inspector-1.png',
+    '/src/assets/products/inspector-2.png',
+    '/src/assets/products/inspector-3.png'
+  ],
   features: [
     { icon: Eye, title: 'Defect Detection', description: '99.9% accuracy in identifying quality issues' },
     { icon: Zap, title: 'Real-time Inspection', description: 'Inspect products at production line speed' },
@@ -473,6 +563,16 @@ export const brandGuardData = {
     { value: '24/7', label: 'Monitoring' }
   ],
   mockupLines: ['100%', '88%', '73%', '100%', '58%'],
+  images: [
+    '/src/assets/products/brand-guard-1.png',
+    '/src/assets/products/brand-guard-2.png',
+    '/src/assets/products/brand-guard-3.png'
+  ],
+  images: [
+    '/src/assets/products/brand-guard-1.png',
+    '/src/assets/products/brand-guard-2.png',
+    '/src/assets/products/brand-guard-3.png'
+  ],
   features: [
     { icon: Shield, title: 'Logo Detection', description: 'Find your logo across the internet automatically' },
     { icon: Search, title: 'Counterfeit Detection', description: 'Identify fake products and unauthorized sellers' },
@@ -525,6 +625,16 @@ export const movieMakerData = {
     { value: '<1hr', label: 'Render Time' }
   ],
   mockupLines: ['100%', '90%', '75%', '100%', '62%'],
+  images: [
+    '/src/assets/products/moviemaker-1.png',
+    '/src/assets/products/moviemaker-2.png',
+    '/src/assets/products/moviemaker-3.png'
+  ],
+  images: [
+    '/src/assets/products/moviemaker-1.png',
+    '/src/assets/products/moviemaker-2.png',
+    '/src/assets/products/moviemaker-3.png'
+  ],
   features: [
     { icon: Film, title: 'Text-to-Video', description: 'Generate complete videos from script descriptions' },
     { icon: Sparkles, title: 'Multiple Styles', description: 'Cinematic, documentary, animated, and more' },
@@ -573,6 +683,16 @@ export const translateGlobalData = {
     { value: '<5min', label: 'Processing' }
   ],
   mockupLines: ['100%', '86%', '71%', '100%', '56%'],
+  images: [
+    '/src/assets/products/translate-global-1.png',
+    '/src/assets/products/translate-global-2.png',
+    '/src/assets/products/translate-global-3.png'
+  ],
+  images: [
+    '/src/assets/products/translate-global-1.png',
+    '/src/assets/products/translate-global-2.png',
+    '/src/assets/products/translate-global-3.png'
+  ],
   features: [
     { icon: Languages, title: '100+ Languages', description: 'Translate to and from any major language' },
     { icon: Music, title: 'Voice-Over', description: 'Natural-sounding voice-over in target language' },
@@ -621,6 +741,16 @@ export const musicStudioData = {
     { value: 'Studio', label: 'Quality' }
   ],
   mockupLines: ['100%', '84%', '69%', '100%', '54%'],
+  images: [
+    '/src/assets/products/music-studio-1.png',
+    '/src/assets/products/music-studio-2.png',
+    '/src/assets/products/music-studio-3.png'
+  ],
+  images: [
+    '/src/assets/products/music-studio-1.png',
+    '/src/assets/products/music-studio-2.png',
+    '/src/assets/products/music-studio-3.png'
+  ],
   features: [
     { icon: Music, title: 'AI Composition', description: 'Generate original music from text descriptions' },
     { icon: Sparkles, title: '50+ Genres', description: 'From classical to EDM, hip-hop to jazz' },
@@ -717,6 +847,16 @@ export const learningPlatformData = {
     { value: '10x', label: 'Faster Creation' }
   ],
   mockupLines: ['100%', '87%', '72%', '100%', '58%'],
+  images: [
+    '/src/assets/products/learning-platform-1.png',
+    '/src/assets/products/learning-platform-2.png',
+    '/src/assets/products/learning-platform-3.png'
+  ],
+  images: [
+    '/src/assets/products/learning-platform-1.png',
+    '/src/assets/products/learning-platform-2.png',
+    '/src/assets/products/learning-platform-3.png'
+  ],
   features: [
     { icon: GraduationCap, title: 'Course Creation', description: 'Generate complete courses from outlines' },
     { icon: Video, title: 'Video Lessons', description: 'Create engaging video lessons automatically' },
