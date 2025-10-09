@@ -18,77 +18,127 @@ export default function SolutionsSection() {
         </div>
 
         {/* Main AI Products */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          {/* DalSiAI */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {/* DalSi AI */}
           <Card className="group hover:shadow-2xl transition-all duration-300 border-primary/20 hover:border-primary/40">
             <CardHeader className="text-center pb-4">
               <div className="mx-auto w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
                 <MessageSquare className="h-8 w-8 text-primary" />
               </div>
-              <CardTitle className="text-2xl font-bold text-primary">DalSiAI</CardTitle>
-              <CardDescription className="text-lg">Advanced Text-Based AI Engine</CardDescription>
+              <CardTitle className="text-2xl font-bold text-primary">Dalsi AI</CardTitle>
+              <CardDescription className="text-lg">Text-Based AI Engine</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 text-center">
               <p className="text-muted-foreground">
-                Our flagship text-based AI solution powered by state-of-the-art language models, delivering 
-                unprecedented accuracy in natural language understanding, generation, and complex reasoning tasks.
+                Advanced text-based AI for content creation, code generation, business communication, and research.
               </p>
               <div className="space-y-2">
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-sm">Advanced conversational AI capabilities</span>
+                  <span className="text-sm">Content & copywriting</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-sm">Real-time query resolution and analysis</span>
+                  <span className="text-sm">Code generation & debugging</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-sm">Context-aware response generation</span>
+                  <span className="text-sm">Business automation</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-sm">Multi-domain expertise integration</span>
+                  <span className="text-sm">Research & analysis</span>
                 </div>
               </div>
+              <Button 
+                onClick={() => window.navigate?.('/models/dalsi-ai')}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                Learn More
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </CardContent>
           </Card>
 
-          {/* DalSiAIVi */}
+          {/* Dalsi AI Vi */}
           <Card className="group hover:shadow-2xl transition-all duration-300 border-accent/20 hover:border-accent/40">
             <CardHeader className="text-center pb-4">
               <div className="mx-auto w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-accent/30 transition-colors">
-                <div className="flex space-x-1">
-                  <Image className="h-4 w-4 text-accent" />
-                  <Video className="h-4 w-4 text-accent" />
-                </div>
+                <Image className="h-8 w-8 text-accent" />
               </div>
-              <CardTitle className="text-2xl font-bold text-accent">DalSiAIVi</CardTitle>
-              <CardDescription className="text-lg">Multimodal AI Vision Engine</CardDescription>
+              <CardTitle className="text-2xl font-bold text-accent">Dalsi AI Vi</CardTitle>
+              <CardDescription className="text-lg">Vision AI Engine</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 text-center">
               <p className="text-muted-foreground">
-                Revolutionary multimodal AI system that seamlessly integrates text, image, and video processing 
-                capabilities, enabling comprehensive visual understanding and content generation.
+                Advanced vision AI for image analysis, document processing, medical imaging, and quality control.
               </p>
               <div className="space-y-2">
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-sm">Advanced image analysis and generation</span>
+                  <span className="text-sm">OCR & document intelligence</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-sm">Video content understanding and creation</span>
+                  <span className="text-sm">Medical image analysis</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-sm">Cross-modal content synthesis</span>
+                  <span className="text-sm">Image generation & editing</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-sm">Real-time visual processing</span>
+                  <span className="text-sm">Quality inspection</span>
                 </div>
               </div>
+              <Button 
+                onClick={() => window.navigate?.('/models/dalsi-ai-vi')}
+                className="w-full bg-accent hover:bg-accent/90"
+              >
+                Learn More
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Dalsi AI Vd */}
+          <Card className="group hover:shadow-2xl transition-all duration-300 border-purple/20 hover:border-purple/40">
+            <CardHeader className="text-center pb-4">
+              <div className="mx-auto w-16 h-16 bg-purple/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-purple/30 transition-colors">
+                <Video className="h-8 w-8 text-purple" />
+              </div>
+              <CardTitle className="text-2xl font-bold text-purple">Dalsi AI Vd</CardTitle>
+              <CardDescription className="text-lg">Media AI Engine</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 text-center">
+              <p className="text-muted-foreground">
+                Comprehensive media AI for video production, translation, music generation, and multimedia content.
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-purple rounded-full"></div>
+                  <span className="text-sm">Video creation & editing</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-purple rounded-full"></div>
+                  <span className="text-sm">100+ language translation</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-purple rounded-full"></div>
+                  <span className="text-sm">Music & audio generation</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-purple rounded-full"></div>
+                  <span className="text-sm">Marketing video ads</span>
+                </div>
+              </div>
+              <Button 
+                onClick={() => window.navigate?.('/models/dalsi-ai-vd')}
+                className="w-full bg-purple hover:bg-purple/90"
+              >
+                Learn More
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </CardContent>
           </Card>
         </div>

@@ -33,19 +33,93 @@ export default function Navigation() {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
             <a href="/" className="text-white hover:text-primary transition-colors">
               Home
             </a>
-            {isHomePage ? (
-              <a href="#solutions" className="text-white hover:text-primary transition-colors">
-                Solutions
-              </a>
-            ) : (
-              <a href="/#solutions" className="text-white hover:text-primary transition-colors">
-                Solutions
-              </a>
-            )}
+            
+            {/* Models Dropdown */}
+            <div className="relative group">
+              <button className="text-white hover:text-primary transition-colors flex items-center">
+                Models
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute left-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                {/* Dalsi AI */}
+                <div className="p-2 border-b border-border">
+                  <a href="/models/dalsi-ai" className="block px-3 py-2 text-primary font-semibold hover:bg-primary/10 rounded">
+                    Dalsi AI (Text)
+                  </a>
+                  <div className="ml-4 space-y-1">
+                    <a href="/products/writer-pro" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Writer Pro
+                    </a>
+                    <a href="/products/code-genius" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Code Genius
+                    </a>
+                    <a href="/products/business-suite" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Business Suite
+                    </a>
+                    <a href="/products/researcher" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Researcher
+                    </a>
+                    <a href="/products/chatbot-builder" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Chatbot Builder
+                    </a>
+                  </div>
+                </div>
+                
+                {/* Dalsi AI Vi */}
+                <div className="p-2 border-b border-border">
+                  <a href="/models/dalsi-ai-vi" className="block px-3 py-2 text-accent font-semibold hover:bg-accent/10 rounded">
+                    Dalsi AI Vi (Vision)
+                  </a>
+                  <div className="ml-4 space-y-1">
+                    <a href="/products/vision-scan" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Vision Scan
+                    </a>
+                    <a href="/products/medvision" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      MedVision
+                    </a>
+                    <a href="/products/art-studio" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Art Studio
+                    </a>
+                    <a href="/products/inspector" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Inspector
+                    </a>
+                    <a href="/products/brand-guard" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Brand Guard
+                    </a>
+                  </div>
+                </div>
+                
+                {/* Dalsi AI Vd */}
+                <div className="p-2">
+                  <a href="/models/dalsi-ai-vd" className="block px-3 py-2 text-purple font-semibold hover:bg-purple/10 rounded">
+                    Dalsi AI Vd (Media)
+                  </a>
+                  <div className="ml-4 space-y-1">
+                    <a href="/products/moviemaker" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      MovieMaker
+                    </a>
+                    <a href="/products/translate-global" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Translate Global
+                    </a>
+                    <a href="/products/music-studio" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Music Studio
+                    </a>
+                    <a href="/products/video-ads" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      VideoAds
+                    </a>
+                    <a href="/products/learning-platform" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                      Learning Platform
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
             {isHomePage ? (
               <a href="#healthcare" className="text-white hover:text-primary transition-colors">
                 Healthcare
