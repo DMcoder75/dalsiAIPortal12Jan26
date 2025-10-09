@@ -38,21 +38,20 @@ export default function Navigation() {
               Home
             </a>
             
-            {/* Models Dropdown */}
+            {/* Dalsi AI Dropdown */}
             <div className="relative group">
               <button className="text-white hover:text-primary transition-colors flex items-center">
-                Models
+                Dalsi AI
                 <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="absolute left-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                {/* Dalsi AI */}
-                <div className="p-2 border-b border-border">
+              <div className="absolute left-0 mt-2 w-56 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="p-2">
                   <a href="/models/dalsi-ai" className="block px-3 py-2 text-primary font-semibold hover:bg-primary/10 rounded">
-                    Dalsi AI (Text)
+                    Model Overview
                   </a>
-                  <div className="ml-4 space-y-1">
+                  <div className="mt-1 space-y-1">
                     <a href="/products/writer-pro" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
                       Writer Pro
                     </a>
@@ -70,13 +69,23 @@ export default function Navigation() {
                     </a>
                   </div>
                 </div>
-                
-                {/* Dalsi AI Vi */}
-                <div className="p-2 border-b border-border">
+              </div>
+            </div>
+            
+            {/* Dalsi AI Vi Dropdown */}
+            <div className="relative group">
+              <button className="text-white hover:text-accent transition-colors flex items-center">
+                Dalsi AI Vi
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute left-0 mt-2 w-56 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="p-2">
                   <a href="/models/dalsi-ai-vi" className="block px-3 py-2 text-accent font-semibold hover:bg-accent/10 rounded">
-                    Dalsi AI Vi (Vision)
+                    Model Overview
                   </a>
-                  <div className="ml-4 space-y-1">
+                  <div className="mt-1 space-y-1">
                     <a href="/products/vision-scan" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
                       Vision Scan
                     </a>
@@ -94,13 +103,23 @@ export default function Navigation() {
                     </a>
                   </div>
                 </div>
-                
-                {/* Dalsi AI Vd */}
+              </div>
+            </div>
+            
+            {/* Dalsi AI Vd Dropdown */}
+            <div className="relative group">
+              <button className="text-white hover:text-purple transition-colors flex items-center">
+                Dalsi AI Vd
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute left-0 mt-2 w-56 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="p-2">
                   <a href="/models/dalsi-ai-vd" className="block px-3 py-2 text-purple font-semibold hover:bg-purple/10 rounded">
-                    Dalsi AI Vd (Media)
+                    Model Overview
                   </a>
-                  <div className="ml-4 space-y-1">
+                  <div className="mt-1 space-y-1">
                     <a href="/products/moviemaker" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded">
                       MovieMaker
                     </a>
