@@ -34,15 +34,17 @@ export default function Navigation() {
    </a>
 
    {/* Desktop Navigation */}
-   <div className="hidden lg:flex items-center space-x-3">
-   <a href="/" className="text-white hover:text-primary transition-colors text-sm">
-    Home
+   <div className="hidden lg:flex items-center space-x-4">
+   <a href="/" className="relative text-white hover:text-primary transition-all duration-300 font-medium group hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">Home</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
    </a>
    
    {/* Dalsi AI Dropdown */}
    <div className="relative group">
-    <button className="text-white hover:text-primary transition-colors flex items-center text-sm whitespace-nowrap">
-    DalsiAI
+    <button className="relative text-white hover:text-primary transition-all duration-300 flex items-center font-medium whitespace-nowrap hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">DalsiAI</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
     <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
     </svg>
@@ -75,8 +77,9 @@ export default function Navigation() {
    
    {/* Dalsi AI Vi Dropdown */}
    <div className="relative group">
-    <button className="text-white hover:text-accent transition-colors flex items-center text-sm whitespace-nowrap">
-    DalsiAI Vi
+    <button className="relative text-white hover:text-accent transition-all duration-300 flex items-center font-medium whitespace-nowrap hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(216,180,254,0.6)]">
+    <span className="relative z-10">DalsiAI Vi</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
     <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
     </svg>
@@ -109,8 +112,9 @@ export default function Navigation() {
    
    {/* Dalsi AI Vd Dropdown */}
    <div className="relative group">
-    <button className="text-white hover:text-purple transition-colors flex items-center text-sm whitespace-nowrap">
-    DalsiAI Vd
+    <button className="relative text-white hover:text-purple transition-all duration-300 flex items-center font-medium whitespace-nowrap hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(124,58,237,0.6)]">
+    <span className="relative z-10">DalsiAI Vd</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple group-hover:w-full transition-all duration-300"></span>
     <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
     </svg>
@@ -141,28 +145,34 @@ export default function Navigation() {
     </div>
    </div>
    {isHomePage ? (
-    <a href="#healthcare" className="text-white hover:text-primary transition-colors text-sm">
-    Healthcare
+    <a href="#healthcare" className="relative text-white hover:text-primary transition-all duration-300 font-medium group hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">Healthcare</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
     </a>
    ) : (
-    <a href="/#healthcare" className="text-white hover:text-primary transition-colors text-sm">
-    Healthcare
+    <a href="/#healthcare" className="relative text-white hover:text-primary transition-all duration-300 font-medium group hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">Healthcare</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
     </a>
    )}
    {isHomePage ? (
-    <a href="#education" className="text-white hover:text-primary transition-colors text-sm">
-    Education
+    <a href="#education" className="relative text-white hover:text-primary transition-all duration-300 font-medium group hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">Education</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
     </a>
    ) : (
-    <a href="/#education" className="text-white hover:text-primary transition-colors text-sm">
-    Education
+    <a href="/#education" className="relative text-white hover:text-primary transition-all duration-300 font-medium group hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">Education</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
     </a>
    )}
-   <a href="/about" className="text-white hover:text-primary transition-colors text-sm">
-    About
+   <a href="/about" className="relative text-white hover:text-primary transition-all duration-300 font-medium group hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">About</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
    </a>
-   <a href="/contact" className="text-white hover:text-primary transition-colors text-sm">
-    Contact
+   <a href="/contact" className="relative text-white hover:text-primary transition-all duration-300 font-medium group hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+    <span className="relative z-10">Contact</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
    </a>
    <Button 
     className="bg-[#5E3BEE] hover:bg-[#5E3BEE]/90 text-white rounded-lg px-4 py-2"
