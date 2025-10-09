@@ -58,11 +58,11 @@ export default function ProductPageTemplate({ productData }) {
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-delay-2">
                 <Button 
                   size="lg" 
-                  className={`${colorClass} hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl`}
+                  className={`${colorClass} text-white hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl`}
                   onClick={() => window.location.href = '/experience'}
                 >
-                  {productData.ctaPrimary}
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <span className="text-white">{productData.ctaPrimary}</span>
+                  <ArrowRight className="ml-2 h-5 w-5 text-white" />
                 </Button>
                 <Button 
                   size="lg" 
