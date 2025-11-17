@@ -41,8 +41,8 @@ export default function ContactPage() {
   const contactInfo = [
     {
       icon: Mail,
-      title: 'Email Us',
-      details: ['contact@neodalsi.com', 'support@neodalsi.com'],
+      title: 'Contact Information',
+      details: ['info@neodalsi.com'],
       description: 'Send us an email anytime'
     },
     {

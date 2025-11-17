@@ -2,6 +2,7 @@ import { Button } from '../components/ui/button'
 import { ArrowLeft, Home, Brain, Stethoscope, GraduationCap, User, Phone, FileText, Shield, Scale, ExternalLink } from 'lucide-react'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
+import Breadcrumb from '../components/Breadcrumb'
 
 export default function Sitemap() {
   const siteStructure = [
@@ -87,8 +88,9 @@ export default function Sitemap() {
            minHeight: '100vh'
          }}>
       <Navigation />
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Sitemap', href: '/sitemap' }]} />
       
-      <main className="pt-20">
+      <main>
         {/* Hero Section */}
         <section className="py-16 sm:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

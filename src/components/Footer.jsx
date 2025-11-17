@@ -48,14 +48,15 @@ export default function Footer() {
    <div className="lg:col-span-1">
    <h3 className="text-lg font-semibold text-foreground mb-6">Solutions & Products</h3>
    <ul className="space-y-3">
-    <li><a href="#dalsi-ai" className="text-muted-foreground hover:text-primary transition-colors">DalSiAI - Text AI Engine</a></li>
-    <li><a href="#dalsi-aivi" className="text-muted-foreground hover:text-primary transition-colors">DalSiAIVi - Multimodal AI</a></li>
+    <li><a href="/models/dalsi-ai" className="text-muted-foreground hover:text-primary transition-colors">DalSiAI - Text AI Engine</a></li>
+    <li><a href="/models/dalsi-ai-vi" className="text-muted-foreground hover:text-primary transition-colors">DalSiAIVi - Multimodal AI</a></li>
+    <li><a href="/models/dalsi-ai-vd" className="text-muted-foreground hover:text-primary transition-colors">DalSiAI VD - Video & Document</a></li>
     <li><a href="#healthcare" className="text-muted-foreground hover:text-primary transition-colors">Healthcare Solutions</a></li>
     <li><a href="#education" className="text-muted-foreground hover:text-primary transition-colors">Education & Training</a></li>
     <li><a href="#automation" className="text-muted-foreground hover:text-primary transition-colors">AI Automation</a></li>
-    <li><a href="#chat" className="text-muted-foreground hover:text-primary transition-colors">Experience Dalsi</a></li>
-    <li><a href="#api" className="text-muted-foreground hover:text-primary transition-colors">API Integration</a></li>
-    <li><a href="#enterprise" className="text-muted-foreground hover:text-primary transition-colors">Enterprise Solutions</a></li>
+    <li><a href="/experience" className="text-muted-foreground hover:text-primary transition-colors">Experience Dalsi</a></li>
+    <li><a href="/api-docs" className="text-muted-foreground hover:text-primary transition-colors">API Integration</a></li>
+    <li><a href="/#solutions" className="text-muted-foreground hover:text-primary transition-colors">Enterprise Solutions</a></li>
    </ul>
    </div>
 
@@ -66,8 +67,8 @@ export default function Footer() {
     <li><a href="/about" className="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
     <li><a href="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact Us</a></li>
     <li><a href="/careers" className="text-muted-foreground hover:text-primary transition-colors">Careers</a></li>
-    <li><a href="/news" className="text-muted-foreground hover:text-primary transition-colors">News & Updates</a></li>
-    <li><a href="/support" className="text-muted-foreground hover:text-primary transition-colors">Support Center</a></li>
+    <li><a href="/news-updates" className="text-muted-foreground hover:text-primary transition-colors">News & Updates</a></li>
+    <li><a href="/support-center" className="text-muted-foreground hover:text-primary transition-colors">Support Center</a></li>
     <li><a href="/documentation" className="text-muted-foreground hover:text-primary transition-colors">Documentation</a></li>
     <li><a href="/community" className="text-muted-foreground hover:text-primary transition-colors">Community</a></li>
     <li><a href="/partners" className="text-muted-foreground hover:text-primary transition-colors">Partners</a></li>

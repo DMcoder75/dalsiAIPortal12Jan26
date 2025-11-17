@@ -11,6 +11,13 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsConditions from './pages/TermsConditions'
 import Sitemap from './pages/Sitemap'
 import VerifyEmail from './pages/VerifyEmail'
+import ApiDocs from './pages/ApiDocs'
+import Careers from './pages/Careers'
+import NewsUpdates from './pages/NewsUpdates'
+import SupportCenter from './pages/SupportCenter'
+import Documentation from './pages/Documentation'
+import Community from './pages/Community'
+import Partners from './pages/Partners'
 
 function App() {
   return (
@@ -24,6 +31,13 @@ function App() {
           <Route path="/terms-conditions" element={<TermsConditions />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/api-docs" element={<ApiDocs />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/news-updates" element={<NewsUpdates />} />
+          <Route path="/support-center" element={<SupportCenter />} />
+          <Route path="/documentation" element={<Documentation />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/partners" element={<Partners />} />
         </Routes>
       </Router>
     </AuthProvider>

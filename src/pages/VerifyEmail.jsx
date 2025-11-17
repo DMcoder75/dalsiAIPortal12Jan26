@@ -5,12 +5,14 @@ import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import logo from '../assets/DalSiAILogo2.png'
+import Breadcrumb from '../components/Breadcrumb'
 
 export default function VerifyEmail() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const [status, setStatus] = useState('verifying') // verifying, success, error
   const [message, setMessage] = useState('Verifying your email...')
+  const [showBreadcrumb] = useState(true)
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -84,7 +86,9 @@ export default function VerifyEmail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {showBreadcrumb && <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Verify Email', href: '/verify-email' }]} />}
+      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-80px)]">
       <Card className="w-full max-w-md bg-card/95 backdrop-blur border-border">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
@@ -148,6 +152,7 @@ export default function VerifyEmail() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

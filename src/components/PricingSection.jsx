@@ -114,7 +114,7 @@ const PricingSection = () => {
 
   {/* Pricing Cards Container - NEW APPROACH */}
   <div className="pricing-grid-container">
-   <style jsx>{`
+   <style>{`
    .pricing-grid-container {
     display: grid;
     grid-template-columns: 1fr;

@@ -37,6 +37,8 @@ import * as dalsiAPI from '../lib/dalsiAPI'
 import { useAuth } from '../contexts/AuthContext'
 import { ChatOptionsMenu } from './ChatOptionsMenu'
 import ExperienceNav from './ExperienceNav'
+import { logChatApiCall, logGuestApiCall, getClientIp } from '../services/apiLogging'
+import { loggingDiagnostics } from '../services/loggingDiagnostics'
 import { 
  getUsageStatus, 
  incrementGuestMessageCount,
@@ -450,6 +452,8 @@ export default function EnhancedChatInterface() {
  const [imagePreview, setImagePreview] = useState(null)
  const [showArchives, setShowArchives] = useState(false)
  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false)
+ const [guestUserId, setGuestUserId] = useState(null)
+ const [clientIp, setClientIp] = useState(null)
  const messagesEndRef = useRef(null)
  const fileInputRef = useRef(null)
  const abortControllerRef = useRef(null)
@@ -493,10 +497,40 @@ How can I assist you today?`,
  }, [messages, streamingMessage])
 
  useEffect(() => {
- const initializeChat = async () => {
+  console.log('🔄 [EFFECT] Chat initialization effect triggered, user:', user ? user.email : 'null')
+  const initializeChat = async () => {
+  console.log('🚀 Starting chat initialization...')
+  
+  // Initialize diagnostics
+  console.log('📊 Initializing logging diagnostics...')
+  if (window.loggingDiagnostics) {
+   console.log('✅ Diagnostics system ready')
+  } else {
+   console.warn('⚠️ Diagnostics system not available')
+  }
+  
   await checkUser()
   await loadAvailableModels()
   await checkAPIHealth()
+  
+  // Fetch client IP address for guest tracking
+  console.log('🌐 Fetching client IP address...')
+  const ip = await getClientIp()
+  console.log('IP fetch result:', ip)
+  if (ip) {
+   setClientIp(ip)
+   console.log('📍 Client IP captured:', ip)
+  } else {
+   console.warn('⚠️ Could not fetch client IP')
+  }
+  
+  // Fetch or create guest user ID for logging
+  if (!user) {
+   console.log('🔍 User not authenticated, initializing guest user...')
+   await initializeGuestUser()
+  } else {
+   console.log('✅ User authenticated:', user.email)
+  }
   
   // Migrate guest messages to database when user logs in
   if (user) {
@@ -650,6 +684,35 @@ How can I assist you today?`,
   console.error('❌ Error migrating guest messages:', error)
  }
  }
+
+ const initializeGuestUser = async () => {
+ try {
+  console.log('🔍 Initializing guest user...')
+  const { data: guestUser, error } = await supabase
+   .from('users')
+   .select('id')
+   .eq('email', 'dalsiainoreply@gmail.com')
+   .maybeSingle()
+  
+  console.log('Guest user query result:', { guestUser, error })
+  
+  if (error) {
+   console.error('❌ Error fetching guest user:', error)
+   return
+  }
+  
+  if (guestUser) {
+   setGuestUserId(guestUser.id)
+   console.log('✅ Guest user ID loaded:', guestUser.id)
+  } else {
+   console.warn('⚠️ Guest user not found in database')
+  }
+ } catch (error) {
+  console.error('❌ Error initializing guest user:', error)
+ }
+}
+
+
 
  const checkUser = async () => {
  try {
@@ -1155,6 +1218,51 @@ How can I assist you today?`,
 
    console.log('✅ AI response received:', finalResponse.substring(0, 100))
 
+   // Log the API call
+   const responseTime = Date.now() - userMessage.id
+   if (user) {
+    // Log authenticated user API call
+    await logChatApiCall({
+     user_id: user.id,
+     endpoint: '/dalsiai/generate',
+     method: 'POST',
+     status_code: 200,
+     response_time_ms: responseTime,
+     tokens_used: Math.ceil(finalResponse.length / 4), // Rough estimate
+     cost_usd: 0,
+     subscription_tier: userSubscription?.tier || 'free',
+     api_key_id: user.api_key_id || null,
+     ip_address: clientIp,
+     request_size_bytes: inputMessage.length,
+     response_size_bytes: finalResponse.length,
+     metadata: {
+      model: selectedModel,
+      messageLength: inputMessage.length,
+      responseLength: finalResponse.length,
+      sessionId: currentChatId
+     }
+    })
+   } else if (guestUserId) {
+    // Log guest API call
+    await logGuestApiCall({
+     guest_user_id: guestUserId,
+     endpoint: '/dalsiai/generate',
+     status_code: 200,
+     response_time_ms: responseTime,
+     tokens_used: Math.ceil(finalResponse.length / 4),
+     cost_usd: 0,
+     ip_address: clientIp,
+     request_size_bytes: inputMessage.length,
+     response_size_bytes: finalResponse.length,
+     metadata: {
+      model: selectedModel,
+      messageLength: inputMessage.length,
+      responseLength: finalResponse.length,
+      sessionId: currentChatId
+     }
+    })
+   }
+
    const aiResponse = {
     id: Date.now() + 1,
     sender: 'ai',
@@ -1204,7 +1312,7 @@ How can I assist you today?`,
    resolve()
    },
    // onError callback
-   (error) => {
+   async (error) => {
    // Prevent multiple error handlers
    if (hasCompleted) {
     return
@@ -1212,6 +1320,43 @@ How can I assist you today?`,
    hasCompleted = true
    
    console.error('❌ Error generating AI response:', error)
+   
+   // Log the error API call
+   const responseTime = Date.now() - userMessage.id
+   if (user) {
+    // Log authenticated user error
+    await logChatApiCall({
+     user_id: user.id,
+     endpoint: '/dalsiai/generate',
+     method: 'POST',
+     status_code: error.status || 500,
+     response_time_ms: responseTime,
+     error_message: error.message,
+     ip_address: clientIp,
+     request_size_bytes: inputMessage.length,
+     metadata: {
+      model: selectedModel,
+      messageLength: inputMessage.length,
+      sessionId: currentChatId
+     }
+    })
+   } else if (guestUserId) {
+    // Log guest error
+    await logGuestApiCall({
+     guest_user_id: guestUserId,
+     endpoint: '/dalsiai/generate',
+     status_code: error.status || 500,
+     response_time_ms: responseTime,
+     error_message: error.message,
+     ip_address: clientIp,
+     request_size_bytes: inputMessage.length,
+     metadata: {
+      model: selectedModel,
+      messageLength: inputMessage.length,
+      sessionId: currentChatId
+     }
+    })
+   }
    
    const errorResponse = {
     id: Date.now() + 1,

@@ -1,8 +1,29 @@
 // Dalsi AI API Integration Layer
 
 // API endpoints for DalSi AI models
+// New unified API endpoint
+const NEW_API_URL = 'https://api.neodalsi.com'
+
+// Legacy endpoints (for backward compatibility)
 const DALSIAI_URL = 'https://dalsiai-106681824395.asia-south2.run.app'
 const DALSIAIVI_URL = 'https://dalsiaivi-service-594985777520.asia-south2.run.app'
+
+// API key for authentication (will be set from user's API key)
+let currentApiKey = null
+
+/**
+ * Set the API key for authenticated requests
+ */
+export const setApiKey = (apiKey) => {
+  currentApiKey = apiKey
+}
+
+/**
+ * Get current API key
+ */
+export const getApiKey = () => {
+  return currentApiKey
+}
 
 /**
  * Get available models based on subscription
@@ -64,6 +85,30 @@ const getModelUrl = (modelId) => {
  */
 export const healthCheck = async (modelId) => {
   try {
+    // Try new API first if API key is available
+    if (currentApiKey) {
+      try {
+        const response = await fetch(`${NEW_API_URL}/dalsiai/health`, {
+          method: 'GET',
+          headers: {
+            'X-API-Key': currentApiKey
+          }
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          return {
+            status: 'healthy',
+            model_loaded: data.model_loaded || true,
+            ...data
+          }
+        }
+      } catch (error) {
+        console.warn('New API health check failed, falling back to legacy API:', error)
+      }
+    }
+    
+    // Fallback to legacy API
     const baseUrl = getModelUrl(modelId)
     const response = await fetch(`${baseUrl}/health`, {
       method: 'GET'
@@ -169,25 +214,39 @@ export const streamGenerateText = async (
   let reader = null
   
   try {
-    const baseUrl = getModelUrl(modelId)
+    // Use new API if API key is available, otherwise fall back to legacy API
+    const useNewApi = !!currentApiKey
+    let endpoint = useNewApi ? `${NEW_API_URL}/dalsiai/generate` : `${getModelUrl(modelId)}/stream`
     
     // Prepare request payload
-    const payload = {
+    const payload = useNewApi ? {
+      prompt: message,
+      use_history: true,
+      response_length: 'medium',
+      max_tokens: maxLength || 2048
+    } : {
       message: message,
       max_length: maxLength
     }
 
-    // Add image data for vision model
-    if (imageDataUrl && modelId === 'dalsi-aivi') {
+    // Add image data for vision model (legacy API only)
+    if (imageDataUrl && modelId === 'dalsi-aivi' && !useNewApi) {
       payload.image_data_url = imageDataUrl
     }
 
+    // Prepare headers
+    const headers = {
+      'Content-Type': 'application/json',
+    }
+    
+    if (useNewApi && currentApiKey) {
+      headers['X-API-Key'] = currentApiKey
+    }
+
     // Make streaming request with abort signal
-    const response = await fetch(`${baseUrl}/stream`, {
+    const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
       body: JSON.stringify(payload),
       signal: abortSignal
     })

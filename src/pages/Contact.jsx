@@ -4,6 +4,7 @@ import { Input } from '../components/ui/input'
 import { ArrowLeft, Mail, Phone, MapPin, Clock, Send, MessageSquare, Users, Briefcase } from 'lucide-react'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
+import Breadcrumb from '../components/Breadcrumb'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -36,8 +37,9 @@ export default function Contact() {
            minHeight: '100vh'
          }}>
       <Navigation />
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Contact Us', href: '/contact' }]} />
       
-      <main className="pt-20">
+      <main>
         {/* Hero Section */}
         <section className="py-16 sm:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
