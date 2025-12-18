@@ -57,6 +57,26 @@ export const FormattedResponseContent = ({ text }) => {
           )
         }
 
+        // Handle numbered lists
+        if (item.type === 'list') {
+          return (
+            <ol key={idx} className="space-y-2 ml-6 text-white">
+              {item.items.map((listItem, listIdx) => (
+                <li key={listIdx} className="text-sm leading-relaxed" style={{
+                  textAlign: 'justify',
+                  textAlignLast: 'left',
+                  wordSpacing: '0.05em',
+                  letterSpacing: '0.3px',
+                  lineHeight: '1.8',
+                  hyphens: 'auto'
+                }}>
+                  <span className="font-semibold text-white">{listItem.number}.</span> {renderFormattedText(listItem.content)}
+                </li>
+              ))}
+            </ol>
+          )
+        }
+
         // Handle regular paragraphs
         if (item.type === 'paragraph') {
           return (

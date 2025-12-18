@@ -50,53 +50,31 @@ function detectContentType(text) {
   
   // Instructional content indicators
   const instructionalIndicators = [
-    /first|second|third|step \d+|procedure|process|method/i,
-    /ingredients|materials|tools|requirements/i,
-    /instructions|directions|follow these|do this/i
+    /ingredients|procedure|instructions|steps|method|process/i,
+    /first|second|third|next|finally|then|after/i
   ]
   
-  let scores = {
-    marketing: 0,
-    educational: 0,
-    narrative: 0,
-    instructional: 0,
-    general: 0
-  }
+  const marketingMatches = marketingIndicators.filter(pattern => pattern.test(lowerText)).length
+  const educationalMatches = educationalIndicators.filter(pattern => pattern.test(lowerText)).length
+  const narrativeMatches = narrativeIndicators.filter(pattern => pattern.test(lowerText)).length
+  const instructionalMatches = instructionalIndicators.filter(pattern => pattern.test(lowerText)).length
   
-  marketingIndicators.forEach(indicator => {
-    if (indicator.test(text)) scores.marketing += 2
-  })
+  if (marketingMatches > 0) return 'marketing'
+  if (narrativeMatches > 0) return 'narrative'
+  if (instructionalMatches > 0) return 'instructional'
+  if (educationalMatches > 0) return 'educational'
   
-  educationalIndicators.forEach(indicator => {
-    if (indicator.test(text)) scores.educational += 2
-  })
-  
-  narrativeIndicators.forEach(indicator => {
-    if (indicator.test(text)) scores.narrative += 2
-  })
-  
-  instructionalIndicators.forEach(indicator => {
-    if (indicator.test(text)) scores.instructional += 2
-  })
-  
-  // Find the highest score
-  const type = Object.keys(scores).reduce((a, b) => 
-    scores[a] > scores[b] ? a : b
-  )
-  
-  // If no clear type detected, default to general
-  return type === 'general' || scores[type] === 0 ? 'general' : type
+  return 'general'
 }
 
 /**
- * Check if text naturally contains section breaks
+ * Detect if text has natural sections with headers
  */
 function hasNaturalSections(text) {
-  // Look for natural section indicators
   const sectionPatterns = [
-    /\n\n[A-Z][^.!?]*[.!?]\n\n/,  // Paragraph followed by blank lines
-    /^[A-Z][^.!?]*:$/m,            // Text ending with colon (section header)
-    /^(introduction|background|overview|conclusion|summary):/im
+    /^#{1,3}\s+/m,  // Markdown headers
+    /^[A-Z][^.!?]*:$/m,  // Lines ending with colon
+    /^(Introduction|Conclusion|Summary|Overview|Background)/m
   ]
   
   return sectionPatterns.some(pattern => pattern.test(text))
@@ -119,6 +97,31 @@ function isHeaderLike(text) {
   ]
   
   return headerPatterns.some(pattern => pattern.test(text.trim()))
+}
+
+/**
+ * Detect if text contains a numbered list
+ */
+function hasNumberedList(text) {
+  return /\d+\.\s+/g.test(text)
+}
+
+/**
+ * Extract numbered list items from text
+ */
+function extractListItems(text) {
+  const listPattern = /(\d+)\.\s+([^\n]*?)(?=\d+\.|$)/gs
+  const items = []
+  let match
+  
+  while ((match = listPattern.exec(text)) !== null) {
+    items.push({
+      number: match[1],
+      content: match[2].trim()
+    })
+  }
+  
+  return items
 }
 
 /**
@@ -160,27 +163,64 @@ function applyBoldFormatting(text) {
   let formatted = text
   
   BOLD_KEYWORDS.forEach(keyword => {
-    // Avoid double-bolding
-    if (!formatted.includes(`**${keyword}**`)) {
-      const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi')
-      formatted = formatted.replace(regex, `**${keyword}**`)
-    }
+    const regex = new RegExp(`\\b${keyword}\\b`, 'gi')
+    formatted = formatted.replace(regex, `**${keyword}**`)
   })
   
   return formatted
 }
 
 /**
- * Format text based on content type
+ * Main formatter function
  */
 export function smartFormatText(text) {
-  if (!text || text.length === 0) return []
+  if (!text || typeof text !== 'string') return []
   
   const contentType = detectContentType(text)
-  const hasNaturalSects = hasNaturalSections(text)
+  const hasLists = hasNumberedList(text)
   const paragraphs = splitIntoParagraphs(text)
   
   const result = []
+  
+  // If text contains numbered lists, extract and format them
+  if (hasLists) {
+    const listItems = extractListItems(text)
+    
+    // Get text before first list item
+    const firstItemMatch = text.match(/\d+\.\s+/)
+    if (firstItemMatch && listItems.length > 0) {
+      const beforeList = text.substring(0, firstItemMatch.index).trim()
+      
+      // Add header and paragraphs before list
+      if (beforeList) {
+        const beforeParagraphs = beforeList.split(/\n\n+/).filter(p => p.trim())
+        beforeParagraphs.forEach((para, idx) => {
+          if (idx === 0 && isHeaderLike(para)) {
+            result.push({
+              type: 'header',
+              content: para.replace(/:$/, '')
+            })
+          } else if (para.trim().length > 0) {
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(para)
+            })
+          }
+        })
+      }
+      
+      // Add list items
+      result.push({
+        type: 'list',
+        items: listItems.map(item => ({
+          number: item.number,
+          content: applyBoldFormatting(item.content)
+        }))
+      })
+    }
+    
+    return result.filter(item => item && ((item.content && item.content.length > 0) || item.type === 'list'))
+  }
   
   // For marketing content: Keep it as-is with minimal formatting
   if (contentType === 'marketing') {
@@ -222,53 +262,6 @@ export function smartFormatText(text) {
     return result
   }
   
-  // For educational/instructional content: Add structure
-  if ((contentType === 'educational' || contentType === 'instructional') && hasNaturalSects) {
-    // Try to identify natural sections
-    let currentSection = null
-    let currentContent = []
-    
-    paragraphs.forEach((para) => {
-      // Check if this paragraph looks like a section header
-      if (para.length < 80 && para.match(/^[A-Z][^.!?]*$/)) {
-        // Save previous section
-        if (currentSection && currentContent.length > 0) {
-          result.push({
-            type: 'section',
-            header: currentSection,
-            content: currentContent.map(c => applyBoldFormatting(c))
-          })
-        }
-        
-        currentSection = para
-        currentContent = []
-      } else {
-        currentContent.push(para)
-      }
-    })
-    
-    // Save last section
-    if (currentSection && currentContent.length > 0) {
-      result.push({
-        type: 'section',
-        header: currentSection,
-        content: currentContent.map(c => applyBoldFormatting(c))
-      })
-    }
-    
-    // If no sections were created, return as paragraphs
-    if (result.length === 0) {
-      paragraphs.forEach((para) => {
-        result.push({
-          type: 'paragraph',
-          content: applyBoldFormatting(para)
-        })
-      })
-    }
-    
-    return result
-  }
-  
   // Default: Return as paragraphs with formatting
   paragraphs.forEach((para, idx) => {
     // Check if first paragraph looks like a header
@@ -277,7 +270,7 @@ export function smartFormatText(text) {
         type: 'header',
         content: para.replace(/:$/, '')  // Remove trailing colon
       })
-    } else {
+    } else if (para.trim().length > 0) {
       result.push({
         type: 'paragraph',
         content: applyBoldFormatting(para)
@@ -285,42 +278,7 @@ export function smartFormatText(text) {
     }
   })
   
-  return result.filter(item => item && item.content && item.content.length > 0)
+  return result.filter(item => item && ((item.content && item.content.length > 0) || item.type === 'list'))
 }
 
-/**
- * Parse formatted text with bold and italic
- */
-export function parseFormattedText(text) {
-  if (!text) return null
-  
-  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*)/g)
-  
-  return parts.map((part, idx) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return {
-        type: 'bold',
-        content: part.slice(2, -2),
-        key: idx
-      }
-    } else if (part.startsWith('*') && part.endsWith('*')) {
-      return {
-        type: 'italic',
-        content: part.slice(1, -1),
-        key: idx
-      }
-    } else {
-      return {
-        type: 'text',
-        content: part,
-        key: idx
-      }
-    }
-  })
-}
-
-export default {
-  smartFormatText,
-  parseFormattedText,
-  detectContentType
-}
+export default smartFormatText
