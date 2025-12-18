@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import logger from '../lib/logger'
 import { getAuthStatus, getApiKeyForRequest } from '../lib/authService'
+import AuthModal from '../components/AuthModal'
 import { smartGenerate, generateAIResponse } from '../lib/aiGenerationService'
 import { checkRateLimit, recordRequest, getUsageStats, updateTrackerTier } from '../lib/rateLimitService'
 import {
@@ -48,6 +49,7 @@ export default function Experience() {
   const [tokenCount, setTokenCount] = useState(0)
   const [suggestedPrompts, setSuggestedPrompts] = useState([])
   const [loadingPrompts, setLoadingPrompts] = useState(true)
+  const [showAuthModal, setShowAuthModal] = useState(false)
   const messagesEndRef = useRef(null)
 
   const models = [
@@ -445,7 +447,10 @@ export default function Experience() {
                 <p className="text-sm font-medium text-foreground mb-3">Guest User</p>
                 <p className="text-xs text-muted-foreground mb-4">Sign in to save your conversations</p>
               </div>
-              <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm">
+              <button 
+                onClick={() => setShowAuthModal(true)}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm"
+              >
                 Sign In
               </button>
             </div>
@@ -484,7 +489,10 @@ export default function Experience() {
               <Settings className="w-5 h-5" />
             </button>
             {!user && (
-              <button className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-all">
+              <button 
+                onClick={() => setShowAuthModal(true)}
+                className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-all"
+              >
                 Sign In
               </button>
             )}
@@ -714,6 +722,12 @@ export default function Experience() {
           </div>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)}
+      />
     </div>
   )
 }
