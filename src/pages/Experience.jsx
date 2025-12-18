@@ -42,7 +42,7 @@ import {
   saveMessage,
   generateConversationTitle
 } from '../lib/conversationService'
-import { getFormattedImplementationResponse } from '../lib/testFormattedResponse'
+import ImplementationSummaryResponse from '../components/ImplementationSummaryResponse'
 
 export default function Experience() {
   const { user, logout } = useAuth()
@@ -211,7 +211,8 @@ export default function Experience() {
       const formattedResponse = {
         id: `msg-${Date.now()}-formatted`,
         role: 'assistant',
-        content: getFormattedImplementationResponse(),
+        content: <ImplementationSummaryResponse />,
+        isComponent: true,
         timestamp: new Date()
       }
       setTimeout(() => {
