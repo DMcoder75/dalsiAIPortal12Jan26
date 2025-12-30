@@ -86,9 +86,17 @@ export const checkModelAccess = async (modelId, usageCount, subscription) => {
 /**
  * Get API endpoint for a model
  */
-const getModelEndpoint = (modelId) => {
-  // All models use the same API endpoint
-  return `${API_URL}/generate`
+const getModelEndpoint = (modelId, serviceType = 'general') => {
+  // Map model IDs to service endpoints
+  const endpointMap = {
+    'education': '/edu/generate',
+    'healthcare': '/healthcare/generate',
+    'weather': '/weathersense/generate',
+    'general': '/generate'
+  }
+  
+  const endpoint = endpointMap[serviceType] || '/generate'
+  return `${API_URL}${endpoint}`
 }
 
 /**
@@ -195,6 +203,7 @@ export const validateImageFile = (file) => {
 
 /**
  * Stream text generation from AI using Server-Sent Events
+ * Supports chat_id for continuation requests
  */
 export const streamGenerateText = async (
   message,
@@ -204,27 +213,50 @@ export const streamGenerateText = async (
   onError,
   modelId = 'dalsi-ai',
   maxLength = 500,
-  abortSignal = null
+  abortSignal = null,
+  chatId = null,
+  serviceType = 'general',
+  gradeLevel = null
 ) => {
   let reader = null
   
   try {
     // Use new NeoDalsi API for all requests
-    const endpoint = getModelEndpoint(modelId)
+    const endpoint = getModelEndpoint(modelId, serviceType)
     
     // Prepare request payload for new API
     const payload = {
-      prompt: message,
-      model: modelId,
+      message: message,
+      mode: 'chat',
       use_history: true,
-      response_length: 'medium',
       max_tokens: maxLength || 2048
+    }
+
+    // Add chat_id for continuation requests
+    if (chatId) {
+      payload.chat_id = chatId
+      console.log('📨 [DALSI_API] Continuation request with chat_id:', chatId)
+    }
+
+    // Add grade_level for education endpoint
+    if (serviceType === 'education' && gradeLevel) {
+      payload.grade_level = gradeLevel
+    }
+
+    // Add city for WeatherSense endpoint
+    if (serviceType === 'weather') {
+      const cityMatch = message.match(/in\s+(\w+)/i)
+      if (cityMatch) {
+        payload.city = cityMatch[1]
+      }
     }
 
     // Add image data if provided
     if (imageDataUrl) {
       payload.image_data_url = imageDataUrl
     }
+
+    console.log('📤 [DALSI_API] Sending payload to', endpoint, ':', payload)
 
     // Prepare headers with JWT and API key
     const headers = getAuthHeaders()
@@ -292,6 +324,8 @@ export const streamGenerateText = async (
             // Handle "response" format (full response in one message)
             if (data.response) {
               console.log('📦 Received full response format')
+              console.log('🔑 [DALSI_API] Response chat_id:', data.chat_id)
+              console.log('🔄 [DALSI_API] Is continuation:', data.is_continuation)
               fullResponse = data.response
               // Clean UTF-8 replacement characters before displaying
               fullResponse = fullResponse.replace(/\ufffd/g, '')
@@ -299,6 +333,23 @@ export const streamGenerateText = async (
               if (onToken) {
                 onToken(fullResponse)
               }
+            }
+            
+            // Store full API response for metadata
+            if (!window._lastApiResponse) {
+              window._lastApiResponse = {}
+            }
+            window._lastApiResponse = {
+              chat_id: data.chat_id,
+              is_continuation: data.is_continuation,
+              model: data.model,
+              service: data.service,
+              completeness_score: data.completeness_score,
+              is_complete: data.is_complete,
+              missing_elements: data.missing_elements,
+              followup_questions: data.followup_questions,
+              references: data.references,
+              timestamp: data.timestamp
             }
             
             // Handle "token" format (streaming tokens)
@@ -337,18 +388,26 @@ export const streamGenerateText = async (
       }
     }
 
-    // Call onComplete with the full response
+    // Call onComplete with the full response and metadata
     if (onComplete && !hasCalledComplete) {
       hasCalledComplete = true
       
-      // Format response with sources if available
+      // Format response with sources and metadata if available
       const aiResponse = {
         content: fullResponse,
         sources: [],
-        model: modelId
+        model: modelId,
+        // Include API metadata for storage
+        ...window._lastApiResponse
       }
       
-      onComplete(aiResponse.content, aiResponse.sources)
+      console.log('✅ [DALSI_API] Stream complete. Response metadata:', {
+        chat_id: aiResponse.chat_id,
+        is_continuation: aiResponse.is_continuation,
+        model: aiResponse.model
+      })
+      
+      onComplete(aiResponse.content, aiResponse.sources, aiResponse)
     }
 
   } catch (error) {
@@ -369,22 +428,43 @@ export const streamGenerateText = async (
 
 /**
  * Generate text without streaming (for non-streaming requests)
+ * Supports chat_id for continuation requests
  */
 export const generateText = async (
   message,
   imageDataUrl,
   modelId = 'dalsi-ai',
-  maxLength = 500
+  maxLength = 500,
+  chatId = null,
+  serviceType = 'general',
+  gradeLevel = null
 ) => {
   try {
-    const endpoint = getModelEndpoint(modelId)
+    const endpoint = getModelEndpoint(modelId, serviceType)
     
     const payload = {
-      prompt: message,
-      model: modelId,
+      message: message,
+      mode: 'chat',
       use_history: true,
-      response_length: 'medium',
       max_tokens: maxLength || 2048
+    }
+
+    // Add chat_id for continuation requests
+    if (chatId) {
+      payload.chat_id = chatId
+    }
+
+    // Add grade_level for education endpoint
+    if (serviceType === 'education' && gradeLevel) {
+      payload.grade_level = gradeLevel
+    }
+
+    // Add city for WeatherSense endpoint
+    if (serviceType === 'weather') {
+      const cityMatch = message.match(/in\s+(\w+)/i)
+      if (cityMatch) {
+        payload.city = cityMatch[1]
+      }
     }
 
     if (imageDataUrl) {
@@ -404,10 +484,28 @@ export const generateText = async (
 
     const data = await response.json()
     
+    console.log('✅ [DALSI_API] Non-streaming response:', {
+      chat_id: data.chat_id,
+      is_continuation: data.is_continuation,
+      model: data.model
+    })
+    
     return {
       content: data.response || data.text || '',
       sources: data.sources || [],
-      model: modelId
+      model: modelId,
+      // Include full API response metadata
+      chat_id: data.chat_id,
+      is_continuation: data.is_continuation,
+      completeness_score: data.completeness_score,
+      is_complete: data.is_complete,
+      missing_elements: data.missing_elements,
+      followup_questions: data.followup_questions,
+      references: data.references,
+      service: data.service,
+      timestamp: data.timestamp,
+      tokens_used: data.tokens_used,
+      response_time_ms: data.response_time_ms
     }
   } catch (error) {
     console.error('❌ Text generation error:', error)
