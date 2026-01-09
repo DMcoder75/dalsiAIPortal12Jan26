@@ -196,6 +196,56 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
       setIsProcessingGoogle(false)
     }
   }
+
+  const handleGmailSignup = async () => {
+    console.log('🔐 [AUTH_MODAL] handleGmailSignup called')
+    setIsNewGoogleUser(true)
+    setShowGoogleDisclosure(true)
+  }
+
+  const handleGmailLogin = async () => {
+    console.log('🔐 [AUTH_MODAL] handleGmailLogin called')
+    setIsNewGoogleUser(false)
+    setShowGoogleDisclosure(true)
+  }
+
+  const handleGoogleDisclosureContinue = async () => {
+    console.log('🔐 [AUTH_MODAL] handleGoogleDisclosureContinue called')
+    setIsProcessingGoogle(true)
+    try {
+      if (isNewGoogleUser) {
+        console.log('🔐 [AUTH_MODAL] Calling signupWithGmail for new user')
+        await signupWithGmail()
+      } else {
+        console.log('🔐 [AUTH_MODAL] Calling loginWithGmail for existing user')
+        await loginWithGmail()
+      }
+    } catch (error) {
+      console.error('❌ [AUTH_MODAL] Google auth error:', error)
+      setError(error.message || 'Google authentication failed')
+      setShowGoogleDisclosure(false)
+      setIsProcessingGoogle(false)
+    }
+  }
+
+  const handleGoogleLoginContinue = async () => {
+    console.log('🔐 [AUTH_MODAL] handleGoogleLoginContinue called')
+    setIsProcessingGoogle(true)
+    try {
+      await loginWithGmail()
+    } catch (error) {
+      console.error('❌ [AUTH_MODAL] Google login error:', error)
+      setError(error.message || 'Google login failed')
+      setShowGoogleDisclosure(false)
+      setIsProcessingGoogle(false)
+    }
+  }
+
+  const handleGoogleProfileSubmit = async (profileData) => {
+    console.log('🔐 [AUTH_MODAL] handleGoogleProfileSubmit called with:', profileData)
+    // This will be implemented when profile setup is needed
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-card border-border">
