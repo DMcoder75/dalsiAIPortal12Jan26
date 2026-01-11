@@ -28,8 +28,23 @@ const renderFormattedText = (paragraph) => {
 export const FormattedResponseContent = ({ text }) => {
   if (!text || typeof text !== 'string') return <p className="text-sm text-white">{text}</p>
 
+  // DEBUG: Log the full text received
+  console.log('[FormattedResponseContent] Full text length:', text.length)
+  console.log('[FormattedResponseContent] Text preview (first 300 chars):', text.substring(0, 300))
+  console.log('[FormattedResponseContent] Text ending (last 300 chars):', text.substring(text.length - 300))
+
   // Apply smart formatting
   const formattedItems = smartFormatText(text)
+  
+  // DEBUG: Log what smartFormatter returns
+  console.log('[FormattedResponseContent] Formatted items count:', formattedItems.length)
+  formattedItems.forEach((item, idx) => {
+    if (item.content) {
+      console.log(`[FormattedResponseContent] Item ${idx}: type=${item.type}, contentLength=${item.content.length}, preview=${typeof item.content === 'string' ? item.content.substring(0, 100) : 'not string'}`)
+    } else {
+      console.log(`[FormattedResponseContent] Item ${idx}: type=${item.type}`)
+    }
+  })
 
   return (
     <div className="space-y-8 text-white">

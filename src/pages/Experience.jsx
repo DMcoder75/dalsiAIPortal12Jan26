@@ -287,7 +287,7 @@ export default function Experience() {
 
     const userMessage = {
       id: `msg-${Date.now()}`,
-      role: 'user',
+      sender: 'user',
       content: inputValue,
       timestamp: new Date()
     }
@@ -304,6 +304,11 @@ export default function Experience() {
 
       // Auto-create conversation with title from first message if needed
       let activeChat = currentChat
+      logger.debug('🔍 [EXPERIENCE] Current activeChat:', {
+        hasActiveChat: !!activeChat,
+        activeChatId: activeChat?.id,
+        activeChatTitle: activeChat?.title
+      })
       if (!activeChat) {
         const generatedTitle = generateTitle(inputValue)
         if (user) {
@@ -343,14 +348,15 @@ export default function Experience() {
         lookupResult: conversationChatIdsRef.current[sessionId]
       })
       
-      const storedChatId = isContinuation ? conversationChatIdsRef.current[sessionId] : null
+      const storedChatId = activeChat?.id || (isContinuation ? conversationChatIdsRef.current[sessionId] : null)
       
-      logger.debug('🔍 [EXPERIENCE] Continuation analysis:', {
+      logger.debug('🔍 [EXPERIENCE] Chat ID being sent to backend:', {
         isContinuation,
         confidence: continuationAnalysis.confidence,
         reason: continuationAnalysis.reason,
-        hasChatId: !!storedChatId,
-        storedChatId: storedChatId || 'NOT FOUND'
+        activeChatId: activeChat?.id,
+        storedChatId: storedChatId,
+        finalChatIdForBackend: storedChatId || 'NONE - will create new'
       })
       
       // Use new AI generation service with auto-detection
@@ -421,7 +427,7 @@ export default function Experience() {
 
       const assistantMessage = {
         id: `msg-${Date.now()}-response`,
-        role: 'assistant',
+        sender: 'ai',
         content: responseContent,
         mode: responseMode,
         references: responseReferences,
@@ -458,7 +464,7 @@ export default function Experience() {
       logger.error('❌ [EXPERIENCE] Error sending message:', error)
       const errorMessage = {
         id: `msg-${Date.now()}-error`,
-        role: 'assistant',
+        sender: 'ai',
         content: error.message || 'Sorry, there was an error processing your message. Please try again.',
         timestamp: new Date()
       }
@@ -517,8 +523,13 @@ export default function Experience() {
   }
 
   const handleSelectConversation = async (id) => {
+    logger.debug('📋 [EXPERIENCE] Selecting conversation:', { conversationId: id })
     const conversation = chatHistory.find(c => c.id === id)
     if (conversation) {
+      logger.debug('✅ [EXPERIENCE] Conversation found and setting as active:', {
+        id: conversation.id,
+        title: conversation.title
+      })
       setCurrentChat(conversation)
       setMessages([])
       setLoading(true)
@@ -531,8 +542,11 @@ export default function Experience() {
             const conversationMessages = await fetchConversationMessages(id, jwtToken)
             const formattedMessages = conversationMessages.map(msg => ({
               id: msg.id,
-              role: msg.role,
+              sender: msg.sender,
               content: msg.content,
+              mode: msg.mode || 'chat',
+              references: msg.references || [],
+              followups: msg.metadata?.followup_questions || msg.followups || [],
               timestamp: new Date(msg.created_at)
             }))
             setMessages(formattedMessages)
@@ -738,16 +752,16 @@ export default function Experience() {
               {messages.map(msg => (
                 <div
                   key={msg.id}
-                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
                     className={`max-w-2xl px-6 py-4 rounded-lg ${
-                      msg.role === 'user'
+                      msg.sender === 'user'
                         ? 'bg-primary text-primary-foreground shadow-lg'
                         : 'bg-card border border-border'
                     }`}
                   >
-                    {msg.role === 'user' ? (
+                    {msg.sender === 'user' ? (
                       <p className="text-sm leading-relaxed">{msg.content}</p>
                     ) : (
                       <AIModeResponseFormatter

@@ -460,6 +460,24 @@ export function smartFormatText(text) {
           content: applyBoldFormatting(item.content)
         }))
       })
+      
+      // Process content AFTER the list
+      const lastListItem = listItems[listItems.length - 1]
+      const lastListItemIndex = processText.lastIndexOf(`${lastListItem.number}. ${lastListItem.content}`)
+      const afterListStartIdx = lastListItemIndex + `${lastListItem.number}. ${lastListItem.content}`.length
+      const afterList = processText.substring(afterListStartIdx).trim()
+      
+      if (afterList) {
+        const afterParagraphs = afterList.split(/\n\n+/).filter(p => p.trim())
+        afterParagraphs.forEach((para) => {
+          if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(para)
+            })
+          }
+        })
+      }
     }
     
     return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
