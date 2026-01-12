@@ -483,6 +483,11 @@ export default function Experience() {
           }
         ])
       }
+      // Refresh conversations list to show newly created chat
+      if (user && !currentChat) {
+        logger.info('🔄 [EXPERIENCE] Refreshing conversations list after new chat creation')
+        await loadUserConversations()
+      }
     } catch (error) {
       logger.error('❌ [EXPERIENCE] Error sending message:', error)
       const errorMessage = {
