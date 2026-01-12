@@ -606,7 +606,7 @@ export default function Experience() {
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Left Sidebar */}
-      <div className={`${sidebarOpen ? 'w-56' : 'w-0'} bg-card border-r border-border flex flex-col transition-all duration-300 overflow-hidden`}>
+      <div className={`${sidebarOpen ? 'w-56 md:w-56' : 'w-0'} bg-card border-r border-border flex flex-col transition-all duration-300 overflow-hidden fixed md:static h-screen md:h-auto z-40 md:z-auto`}>
         {/* Logo & Branding */}
         <div className="p-6 border-b border-border">
           <a href="/" className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity cursor-pointer">
@@ -691,37 +691,37 @@ export default function Experience() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="h-16 border-b border-border flex items-center justify-between px-6 bg-background/50 backdrop-blur">
-          <div className="flex items-center gap-4">
+        <div className="h-16 border-b border-border flex items-center justify-between px-3 md:px-6 bg-background/50 backdrop-blur">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors"
+              className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-3">
-              <button className="px-4 py-2 bg-card hover:bg-card/80 rounded-lg text-sm font-medium transition-colors border border-border">
-                {selectedModelObj?.name || 'Select Model'}
+            <div className="flex items-center gap-2 md:gap-3 flex-1 md:flex-none">
+              <button className="px-2 md:px-4 py-2 bg-card hover:bg-card/80 rounded-lg text-xs md:text-sm font-medium transition-colors border border-border">
+                {selectedModelObj?.name || 'Model'}
               </button>
-              <button className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <button className="hidden md:block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Change Model
               </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <button className="relative p-2 hover:bg-muted rounded-lg transition-colors">
               <Bell className="w-5 h-5" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
             </button>
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+            <button className="hidden md:block p-2 hover:bg-muted rounded-lg transition-colors">
               <Settings className="w-5 h-5" />
             </button>
             {!user && (
               <button 
                 onClick={() => setShowAuthModal(true)}
-                className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-all"
+                className="px-2 md:px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs md:text-sm font-medium transition-all"
               >
                 Sign In
               </button>
@@ -730,7 +730,7 @@ export default function Experience() {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 overflow-y-auto flex flex-col items-center p-8">
+        <div className="flex-1 overflow-y-auto flex flex-col items-center p-4 md:p-8">
           {/* Small Logo - Always Visible */}
           <div className="w-12 h-12 mx-auto mb-6">
             <img src={logo} alt="DalSiAI" className="w-full h-full object-contain" />
@@ -855,7 +855,7 @@ export default function Experience() {
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-border bg-background/50 backdrop-blur p-6">
+        <div className="border-t border-border bg-background/50 backdrop-blur p-3 md:p-6">
           <div className="max-w-4xl mx-auto">
             {!user && (
               <div className="mb-4 p-4 bg-primary/10 border border-primary/30 rounded-lg flex items-start gap-3">
@@ -900,7 +900,7 @@ export default function Experience() {
       </div>
 
       {/* Right Sidebar */}
-      <div className={`${rightSidebarOpen ? 'w-64' : 'w-0'} bg-card border-l border-border flex flex-col transition-all duration-300 overflow-hidden`}>
+      <div className={`${rightSidebarOpen ? 'w-64 md:w-64' : 'w-0'} bg-card border-l border-border flex flex-col transition-all duration-300 overflow-hidden hidden md:flex`}>
         <div className="p-6 border-b border-border flex items-center justify-between">
           <h3 className="text-lg font-semibold text-foreground">Quick Actions</h3>
           <button
