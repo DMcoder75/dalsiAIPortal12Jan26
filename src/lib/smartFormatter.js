@@ -527,7 +527,11 @@ export function smartFormatText(text) {
     
     let lastHeadingIdx = -1
     headings.forEach((heading, idx) => {
-      const lineIdx = lines.findIndex(line => line.includes(heading.content))
+      // Find the line that contains the heading with hash symbols
+      const lineIdx = lines.findIndex(line => {
+        const match = line.match(/^(#{1,6})\s+(.+)$/)
+        return match && match[2].trim() === heading.content
+      })
       
       if (lineIdx > lastHeadingIdx) {
         // Add content before this heading
