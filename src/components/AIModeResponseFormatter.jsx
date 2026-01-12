@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { ChevronDown, ChevronUp, CheckCircle2, Circle, Copy, ExternalLink, Sparkles, MessageCircle } from 'lucide-react'
+import { ChevronDown, ChevronUp, CheckCircle2, Circle, Copy, ExternalLink, Sparkles, MessageCircle, Volume2, Download } from 'lucide-react'
 import FormattedResponseContent from './FormattedResponseContent'
 
 /**
@@ -13,6 +13,7 @@ import FormattedResponseContent from './FormattedResponseContent'
  */
 export const ChatModeResponse = ({ response, references, followups, onFollowupClick }) => {
   const [copied, setCopied] = React.useState(false)
+  const [isSpeaking, setIsSpeaking] = React.useState(false)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(response)
@@ -20,16 +21,59 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const handleSpeak = () => {
+    if (isSpeaking) {
+      window.speechSynthesis.cancel()
+      setIsSpeaking(false)
+      return
+    }
+
+    const textToSpeak = typeof response === 'string' ? response : String(response)
+    const utterance = new SpeechSynthesisUtterance(textToSpeak)
+    utterance.onend = () => setIsSpeaking(false)
+    
+    setIsSpeaking(true)
+    window.speechSynthesis.speak(utterance)
+  }
+
+  const handleDownload = () => {
+    const textToDownload = typeof response === 'string' ? response : String(response)
+    const element = document.createElement('a')
+    const file = new Blob([textToDownload], { type: 'text/plain' })
+    element.href = URL.createObjectURL(file)
+    element.download = `response-${Date.now()}.txt`
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
+  }
+
   return (
     <div className="space-y-4">
-      {/* Copy Button */}
-      <div className="flex justify-end mb-2">
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-2 mb-2">
         <button
           onClick={handleCopy}
           className="flex items-center gap-1 px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
+          title="Copy response"
         >
           <Copy className="w-3 h-3" />
           {copied ? 'Copied!' : 'Copy'}
+        </button>
+        <button
+          onClick={handleSpeak}
+          className="flex items-center gap-1 px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
+          title="Speak response"
+        >
+          <Volume2 className="w-3 h-3" />
+          {isSpeaking ? 'Stop' : 'Speak'}
+        </button>
+        <button
+          onClick={handleDownload}
+          className="flex items-center gap-1 px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
+          title="Download response"
+        >
+          <Download className="w-3 h-3" />
+          Download
         </button>
       </div>
 
