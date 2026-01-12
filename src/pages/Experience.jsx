@@ -312,6 +312,7 @@ export default function Experience() {
       trackFunnelStep('message_sent', { model: selectedModel })
 
       logger.info('🚀 [EXPERIENCE] Sending message with model:', selectedModel)
+      logger.info('📋 [EXPERIENCE] currentChat state:', { currentChat, hasCurrentChat: !!currentChat })
 
       // Auto-create conversation with title from first message if needed
       let activeChat = currentChat
@@ -320,6 +321,9 @@ export default function Experience() {
         activeChatId: activeChat?.id,
         activeChatTitle: activeChat?.title
       })
+      if (!activeChat) {
+        logger.warn('⚠️ [EXPERIENCE] activeChat is null, will create new conversation')
+      }
       if (!activeChat) {
         const generatedTitle = generateTitle(inputValue)
         if (user) {
@@ -335,7 +339,9 @@ export default function Experience() {
           // For guest users: use the guest user ID from auth service
           const guestUserId = getGuestUserId()
           activeChat = { id: guestUserId || `guest-${Date.now()}`, title: generatedTitle }
+          logger.info('✅ [EXPERIENCE] Created guest activeChat:', { id: activeChat.id, title: activeChat.title })
           setCurrentChat(activeChat)
+          logger.info('✅ [EXPERIENCE] Called setCurrentChat with:', { id: activeChat.id, title: activeChat.title })
         }
       }
 
@@ -361,7 +367,9 @@ export default function Experience() {
         lookupResult: conversationChatIdsRef.current[sessionId]
       })
       
-      const storedChatId = activeChat?.id || (isContinuation ? conversationChatIdsRef.current[sessionId] : null)
+      // CRITICAL FIX: Always use stored chat_id from backend response if available
+      // This ensures we use the actual chat_id created by backend, not the initial guest_user_id
+      const storedChatId = conversationChatIdsRef.current[sessionId] || activeChat?.id
       
       logger.debug('🔍 [EXPERIENCE] Chat ID being sent to backend:', {
         isContinuation,
@@ -403,10 +411,20 @@ export default function Experience() {
       logger.info('📊 [EXPERIENCE] Full API response:', response)
       
       // Store chat_id for this conversation if provided
-      if (response.data?.chat_id) {
-        conversationChatIdsRef.current[sessionId] = response.data.chat_id
-        logger.info('💾 [EXPERIENCE] Stored chat_id for conversation:', response.data.chat_id)
+      if (response.chat_id) {
+        conversationChatIdsRef.current[sessionId] = response.chat_id
+        logger.info('💾 [EXPERIENCE] Stored chat_id for conversation:', response.chat_id)
         logger.debug('📊 [EXPERIENCE] Chat ID storage:', conversationChatIdsRef.current)
+        
+        // CRITICAL: Update currentChat with the new chat_id from backend
+        if (currentChat && currentChat.id !== response.chat_id) {
+          const updatedChat = { ...currentChat, id: response.chat_id }
+          setCurrentChat(updatedChat)
+          logger.info('🔄 [EXPERIENCE] Updated currentChat with new chat_id:', {
+            oldId: currentChat.id,
+            newId: response.chat_id
+          })
+        }
       }
 
       // Lock the endpoint for this conversation on first message
