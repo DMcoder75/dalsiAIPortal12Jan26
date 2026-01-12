@@ -411,18 +411,23 @@ export default function Experience() {
       logger.info('📊 [EXPERIENCE] Full API response:', response)
       
       // Store chat_id for this conversation if provided
-      if (response.chat_id) {
-        conversationChatIdsRef.current[sessionId] = response.chat_id
-        logger.info('💾 [EXPERIENCE] Stored chat_id for conversation:', response.chat_id)
-        logger.debug('📊 [EXPERIENCE] Chat ID storage:', conversationChatIdsRef.current)
+      // NOTE: chat_id is inside response.data, not at top level
+      const chatIdFromResponse = response.data?.chat_id
+      if (chatIdFromResponse) {
+        conversationChatIdsRef.current[sessionId] = chatIdFromResponse
+        logger.info('💾 [EXPERIENCE] Stored chat_id for conversation:', {
+          sessionId,
+          chatId: chatIdFromResponse,
+          fullRef: conversationChatIdsRef.current
+        })
         
         // CRITICAL: Update currentChat with the new chat_id from backend
-        if (currentChat && currentChat.id !== response.chat_id) {
-          const updatedChat = { ...currentChat, id: response.chat_id }
+        if (currentChat && currentChat.id !== chatIdFromResponse) {
+          const updatedChat = { ...currentChat, id: chatIdFromResponse }
           setCurrentChat(updatedChat)
           logger.info('🔄 [EXPERIENCE] Updated currentChat with new chat_id:', {
             oldId: currentChat.id,
-            newId: response.chat_id
+            newId: chatIdFromResponse
           })
         }
       }
