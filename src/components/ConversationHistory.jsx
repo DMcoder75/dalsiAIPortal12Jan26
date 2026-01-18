@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Copy } from 'lucide-react'
 import { Button } from './ui/button'
 import ConversationMenu from './ConversationMenu'
@@ -16,7 +16,6 @@ export default function ConversationHistory({
   onNewConversation,
   isLoading = false
 }) {
-  const [expandedId, setExpandedId] = useState(null)
   const [hoveredId, setHoveredId] = useState(null)
 
   // Format date for display
@@ -83,57 +82,62 @@ export default function ConversationHistory({
 
           {/* Conversations for this date */}
           <div className="space-y-1 -mx-2">
-            {groupedConversations[date].map((conv) => (
-              <div
-                key={conv.id}
-                onMouseEnter={() => setHoveredId(conv.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                className={`group relative px-4 py-2 cursor-pointer transition-colors ${
-                  currentChatId === conv.id
-                    ? 'bg-purple-600 text-white'
-                    : 'hover:bg-muted text-foreground'
-                }`}
-                onClick={() => onSelectConversation(conv.id)}
-              >
-                {/* Conversation Title */}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{conv.title}</p>
-                    {conv.message_count > 0 && (
-                      <p className={`text-xs ${currentChatId === conv.id ? 'text-purple-100' : 'text-muted-foreground'}`}>
-                        {conv.message_count} message{conv.message_count !== 1 ? 's' : ''}
-                      </p>
+            {groupedConversations[date].map((conv) => {
+              // Check if this conversation is selected
+              const isSelected = currentChatId === conv.id
+              
+              return (
+                <div
+                  key={`conv-${conv.id}`}
+                  onMouseEnter={() => setHoveredId(conv.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  className={`group relative px-4 py-2 cursor-pointer transition-all duration-200 ${
+                    isSelected
+                      ? 'bg-purple text-white shadow-md'
+                      : 'hover:bg-muted text-foreground'
+                  }`}
+                  onClick={() => onSelectConversation(conv.id)}
+                >
+                  {/* Conversation Title */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{conv.title}</p>
+                      {conv.message_count > 0 && (
+                        <p className={`text-xs ${isSelected ? 'text-purple-100' : 'text-muted-foreground'}`}>
+                          {conv.message_count} message{conv.message_count !== 1 ? 's' : ''}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Action Buttons (visible on hover) */}
+                    {hoveredId === conv.id && (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            navigator.clipboard.writeText(conv.title)
+                          }}
+                          className={`p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity ${
+                            isSelected
+                              ? 'hover:bg-dark-purple'
+                              : 'hover:bg-muted'
+                          }`}
+                          title="Copy title"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                        <ConversationMenu
+                          conversation={conv}
+                          onEdit={onEditConversation}
+                          onDelete={onDeleteConversation}
+                          isLoading={isLoading}
+                        />
+                      </div>
                     )}
                   </div>
-
-                  {/* Action Buttons (visible on hover) */}
-                  {hoveredId === conv.id && (
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigator.clipboard.writeText(conv.title)
-                        }}
-                        className={`p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity ${
-                          currentChatId === conv.id
-                            ? 'hover:bg-purple-700'
-                            : 'hover:bg-muted'
-                        }`}
-                        title="Copy title"
-                      >
-                        <Copy className="h-3 w-3" />
-                      </button>
-                      <ConversationMenu
-                        conversation={conv}
-                        onEdit={onEditConversation}
-                        onDelete={onDeleteConversation}
-                        isLoading={isLoading}
-                      />
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       ))}

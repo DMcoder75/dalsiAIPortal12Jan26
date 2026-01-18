@@ -145,50 +145,55 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
         </div>
       )}
 
-      {/* Separator before Follow-up Questions */}
+      {/* Thicker Separator before Follow-up Questions */}
       {followups && followups.length > 0 && (
-        <div className="my-4 h-px bg-gradient-to-r from-purple-500/20 via-purple-500/10 to-transparent"></div>
+        <div className="my-6 h-0.5 bg-gradient-to-r from-purple-500/40 via-purple-500/30 to-transparent"></div>
       )}
 
-      {/* Follow-up Questions Section - Premium Design */}
+      {/* Follow-up Questions Section - Improved Design */}
       {followups && followups.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-purple-500/20">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="mt-6">
+          <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4 text-purple-400" />
               <h3 className="text-xs font-bold text-purple-300 tracking-widest uppercase">
-                Follow-up Questions
+                Suggested follow-ups
               </h3>
             </div>
           </div>
           
-          <div className="grid gap-2">
+          <div className="space-y-0">
             {followups.map((followup, idx) => (
-              <button
-                key={idx}
-                onClick={() => onFollowupClick && onFollowupClick(followup)}
-                className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:shadow-md hover:shadow-purple-500/15 text-left w-full"
-                title={followup}
-              >
-                {/* Animated background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-pink-600/2 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                {/* Border gradient */}
-                <div className="absolute inset-0 rounded-lg border border-purple-500/20 group-hover:border-purple-400/40 transition-colors duration-300"></div>
-                
-                {/* Content */}
-                <div className="relative px-3 py-2 flex items-start gap-2">
-                  <div className="flex-shrink-0 mt-0.5">
-                    <span className="text-purple-400 group-hover:text-purple-300 transition-colors text-lg">➕</span>
+              <div key={idx}>
+                <button
+                  onClick={() => onFollowupClick && onFollowupClick(followup)}
+                  className="group relative w-full transition-all duration-300 text-left py-3 px-4 flex items-center justify-between hover:bg-purple-500/5"
+                  title={followup}
+                >
+                  {/* Content */}
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <MessageCircle className="w-3 h-3 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-purple-200 group-hover:text-purple-100 transition-colors">
+                        {followup}
+                      </p>
+                    </div>
                   </div>
                   
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-purple-200 group-hover:text-purple-100 transition-colors line-clamp-2">
-                      {followup}
-                    </p>
+                  {/* Arrow Icon */}
+                  <div className="flex-shrink-0 ml-3 text-purple-400 group-hover:text-purple-300 transition-colors">
+                    <span className="text-lg">→</span>
                   </div>
-                </div>
-              </button>
+                </button>
+                
+                {/* Line separator between items */}
+                {idx < followups.length - 1 && (
+                  <div className="h-px bg-gradient-to-r from-purple-500/20 via-purple-500/10 to-transparent"></div>
+                )}
+              </div>
             ))}
           </div>
         </div>
@@ -198,18 +203,16 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
 }
 
 /**
- * Debate mode response with structured arguments
+ Debate mode response with structured arguments
  */
 export const DebateModeResponse = ({ response, arguments: args, references, followups, onFollowupClick }) => {
   const [expandedArgs, setExpandedArgs] = React.useState({})
-
   const toggleArg = (idx) => {
     setExpandedArgs(prev => ({
       ...prev,
       [idx]: !prev[idx]
     }))
   }
-
   return (
     <div className="space-y-4">
       {/* Main Response */}
@@ -220,7 +223,6 @@ export const DebateModeResponse = ({ response, arguments: args, references, foll
           <div className="text-sm leading-relaxed">{response}</div>
         )}
       </div>
-
       {/* Arguments Section */}
       {args && args.length > 0 && (
         <div className="mt-6 pt-4 border-t border-purple-500/20">
@@ -249,7 +251,6 @@ export const DebateModeResponse = ({ response, arguments: args, references, foll
           </div>
         </div>
       )}
-
       {/* References */}
       {references && references.length > 0 && (
         <div className="mt-6 pt-4 border-t border-purple-500/20">
@@ -269,7 +270,6 @@ export const DebateModeResponse = ({ response, arguments: args, references, foll
           </div>
         </div>
       )}
-
       {/* Follow-up Questions */}
       {followups && followups.length > 0 && (
         <div className="mt-6 pt-4 border-t border-purple-500/20">
@@ -290,6 +290,5 @@ export const DebateModeResponse = ({ response, arguments: args, references, foll
     </div>
   )
 }
-
 export const AIModeResponseFormatter = ChatModeResponse
 export default ChatModeResponse

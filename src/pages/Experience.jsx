@@ -657,7 +657,7 @@ export default function Experience() {
         <div className="flex-1 overflow-y-auto p-4">
           <ConversationHistory
             conversations={chatHistory}
-            currentChatId={currentChat?.id}
+            currentChatId={currentChat?.id || null}
             onSelectConversation={handleSelectConversation}
             onDeleteConversation={handleDeleteChat}
             onEditConversation={handleEditConversation}
