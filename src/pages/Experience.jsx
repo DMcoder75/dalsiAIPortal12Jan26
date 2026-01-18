@@ -250,7 +250,9 @@ export default function Experience() {
       conversationChatIdsRef.current = {}
       
       logger.info('📝 [EXPERIENCE] New conversation started - blank chat ready for input')
-      trackFunnelStep('new_chat_created', { model: selectedModel })
+      if (user?.id) {
+        trackFunnelStep(user.id, 'new_chat_created', { model: selectedModel })
+      }
     } catch (error) {
       logger.error('Error creating new chat:', error)
     }
@@ -318,9 +320,10 @@ export default function Experience() {
     setInputValue('')
     setLoading(true)
 
-    try {
-      // Track funnel step
-      trackFunnelStep('message_sent', { model: selectedModel })
+    try {      // Track message sent
+      if (user?.id) {
+        trackFunnelStep(user.id, 'message_sent', { model: selectedModel })
+      }
 
       logger.info('🚀 [EXPERIENCE] Sending message with model:', selectedModel)
       logger.info('📋 [EXPERIENCE] currentChat state:', { currentChat, hasCurrentChat: !!currentChat })

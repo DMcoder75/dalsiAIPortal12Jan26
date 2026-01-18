@@ -380,146 +380,8 @@ export function smartFormatText(text) {
     })
   })
   
-  // Priority 3: Check for tables
-  const hasTable = hasMarkdownTable(processText)
-  if (hasTable) {
-    const tableData = parseMarkdownTable(processText)
-    if (tableData) {
-      const beforeTable = processText.substring(0, processText.indexOf(processText.split('\n')[tableData.startIdx])).trim()
-      if (beforeTable) {
-        const beforeParagraphs = beforeTable.split(/\n\n+/).filter(p => p.trim())
-        beforeParagraphs.forEach((para, idx) => {
-          if (idx === 0 && isHeaderLike(para)) {
-            result.push({
-              type: 'header',
-              content: para.replace(/:$/, '')
-            })
-          } else if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
-            result.push({
-              type: 'paragraph',
-              content: applyBoldFormatting(para)
-            })
-          }
-        })
-      }
-      
-      result.push({
-        type: 'table',
-        headers: tableData.headers,
-        rows: tableData.rows
-      })
-      
-      const afterTableStartIdx = processText.indexOf(processText.split('\n')[tableData.endIdx]) + processText.split('\n')[tableData.endIdx].length
-      const afterTable = processText.substring(afterTableStartIdx).trim()
-      if (afterTable) {
-        const afterParagraphs = afterTable.split(/\n\n+/).filter(p => p.trim())
-        afterParagraphs.forEach((para) => {
-          if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
-            result.push({
-              type: 'paragraph',
-              content: applyBoldFormatting(para)
-            })
-          }
-        })
-      }
-      
-      return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
-    }
-  }
-  
-  // Priority 4: Check for numbered lists
-  const hasLists = hasNumberedList(processText)
-  if (hasLists) {
-    const listItems = extractListItems(processText)
-    
-    if (listItems.length > 0) {
-      const firstListItemIndex = processText.indexOf(`${listItems[0].number}.`)
-      const beforeList = processText.substring(0, firstListItemIndex).trim()
-      
-      if (beforeList) {
-        const beforeParagraphs = beforeList.split(/\n\n+/).filter(p => p.trim())
-        beforeParagraphs.forEach((para, idx) => {
-          if (idx === 0 && isHeaderLike(para)) {
-            result.push({
-              type: 'header',
-              content: para.replace(/:$/, '')
-            })
-          } else if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
-            result.push({
-              type: 'paragraph',
-              content: applyBoldFormatting(para)
-            })
-          }
-        })
-      }
-      
-      result.push({
-        type: 'list',
-        items: listItems.map(item => ({
-          number: item.number,
-          content: applyBoldFormatting(item.content)
-        }))
-      })
-      
-      // Process content AFTER the list
-      const lastListItem = listItems[listItems.length - 1]
-      const lastListItemIndex = processText.lastIndexOf(`${lastListItem.number}. ${lastListItem.content}`)
-      const afterListStartIdx = lastListItemIndex + `${lastListItem.number}. ${lastListItem.content}`.length
-      const afterList = processText.substring(afterListStartIdx).trim()
-      
-      if (afterList) {
-        const afterParagraphs = afterList.split(/\n\n+/).filter(p => p.trim())
-        afterParagraphs.forEach((para) => {
-          if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
-            result.push({
-              type: 'paragraph',
-              content: applyBoldFormatting(para)
-            })
-          }
-        })
-      }
-    }
-    
-    return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
-  }
-  
-  // Priority 5: Check for unordered lists
-  const hasUnordered = hasUnorderedList(processText)
-  if (hasUnordered) {
-    const unorderedItems = extractUnorderedListItems(processText)
-    
-    if (unorderedItems.length > 0) {
-      const lines = processText.split('\n')
-      const firstListLineIdx = lines.findIndex(line => /^[\s]*[-*+]\s+/.test(line))
-      const beforeList = lines.slice(0, firstListLineIdx).join('\n').trim()
-      
-      if (beforeList) {
-        const beforeParagraphs = beforeList.split(/\n\n+/).filter(p => p.trim())
-        beforeParagraphs.forEach((para, idx) => {
-          if (idx === 0 && isHeaderLike(para)) {
-            result.push({
-              type: 'header',
-              content: para.replace(/:$/, '')
-            })
-          } else if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
-            result.push({
-              type: 'paragraph',
-              content: applyBoldFormatting(para)
-            })
-          }
-        })
-      }
-      
-      result.push({
-        type: 'unordered_list',
-        items: unorderedItems
-      })
-    }
-    
-    return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
-  }
-  
-  // Priority 6: Check for Markdown headings
+  // Priority 3: Check for Markdown headings FIRST (before lists)
+  // This prevents numbered lists within sections from destroying content
   const hasHeadings = hasMarkdownHeadings(processText)
   if (hasHeadings) {
     const headings = extractHeadings(processText)
@@ -575,6 +437,147 @@ export function smartFormatText(text) {
     
     return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
   }
+  
+  // Priority 4: Check for tables
+  const hasTable = hasMarkdownTable(processText)
+  if (hasTable) {
+    const tableData = parseMarkdownTable(processText)
+    if (tableData) {
+      const beforeTable = processText.substring(0, processText.indexOf(processText.split('\n')[tableData.startIdx])).trim()
+      if (beforeTable) {
+        const beforeParagraphs = beforeTable.split(/\n\n+/).filter(p => p.trim())
+        beforeParagraphs.forEach((para, idx) => {
+          if (idx === 0 && isHeaderLike(para)) {
+            result.push({
+              type: 'header',
+              content: para.replace(/:$/, '')
+            })
+          } else if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(para)
+            })
+          }
+        })
+      }
+      
+      result.push({
+        type: 'table',
+        headers: tableData.headers,
+        rows: tableData.rows
+      })
+      
+      const afterTableStartIdx = processText.indexOf(processText.split('\n')[tableData.endIdx]) + processText.split('\n')[tableData.endIdx].length
+      const afterTable = processText.substring(afterTableStartIdx).trim()
+      if (afterTable) {
+        const afterParagraphs = afterTable.split(/\n\n+/).filter(p => p.trim())
+        afterParagraphs.forEach((para) => {
+          if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(para)
+            })
+          }
+        })
+      }
+      
+      return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
+    }
+  }
+  
+  // Priority 5: Check for numbered lists (lower priority than headings)
+  const hasLists = hasNumberedList(processText)
+  if (hasLists) {
+    const listItems = extractListItems(processText)
+    
+    if (listItems.length > 0) {
+      const firstListItemIndex = processText.indexOf(`${listItems[0].number}.`)
+      const beforeList = processText.substring(0, firstListItemIndex).trim()
+      
+      if (beforeList) {
+        const beforeParagraphs = beforeList.split(/\n\n+/).filter(p => p.trim())
+        beforeParagraphs.forEach((para, idx) => {
+          if (idx === 0 && isHeaderLike(para)) {
+            result.push({
+              type: 'header',
+              content: para.replace(/:$/, '')
+            })
+          } else if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(para)
+            })
+          }
+        })
+      }
+      
+      result.push({
+        type: 'list',
+        items: listItems.map(item => ({
+          number: item.number,
+          content: applyBoldFormatting(item.content)
+        }))
+      })
+      
+      // Process content AFTER the list
+      const lastListItem = listItems[listItems.length - 1]
+      const lastListItemIndex = processText.lastIndexOf(`${lastListItem.number}. ${lastListItem.content}`)
+      const afterListStartIdx = lastListItemIndex + `${lastListItem.number}. ${lastListItem.content}`.length
+      const afterList = processText.substring(afterListStartIdx).trim()
+      
+      if (afterList) {
+        const afterParagraphs = afterList.split(/\n\n+/).filter(p => p.trim())
+        afterParagraphs.forEach((para) => {
+          if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(para)
+            })
+          }
+        })
+      }
+    }
+    
+    return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
+  }
+  
+  // Priority 6: Check for unordered lists
+  const hasUnordered = hasUnorderedList(processText)
+  if (hasUnordered) {
+    const unorderedItems = extractUnorderedListItems(processText)
+    
+    if (unorderedItems.length > 0) {
+      const lines = processText.split('\n')
+      const firstListLineIdx = lines.findIndex(line => /^[\s]*[-*+]\s+/.test(line))
+      const beforeList = lines.slice(0, firstListLineIdx).join('\n').trim()
+      
+      if (beforeList) {
+        const beforeParagraphs = beforeList.split(/\n\n+/).filter(p => p.trim())
+        beforeParagraphs.forEach((para, idx) => {
+          if (idx === 0 && isHeaderLike(para)) {
+            result.push({
+              type: 'header',
+              content: para.replace(/:$/, '')
+            })
+          } else if (para.trim().length > 0 && !para.includes('__CODE_BLOCK_') && !para.includes('__BLOCKQUOTE_')) {
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(para)
+            })
+          }
+        })
+      }
+      
+      result.push({
+        type: 'unordered_list',
+        items: unorderedItems
+      })
+    }
+    
+    return restoreCodeBlocksAndQuotes(result, codeBlockMap, blockquoteMap)
+  }
+  
+  // Priority 7: Markdown headings already handled above as Priority 3
   
   // Default: Process as paragraphs
   const paragraphs = splitIntoParagraphs(processText)
