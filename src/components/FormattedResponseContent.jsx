@@ -111,8 +111,18 @@ export const FormattedResponseContent = ({ text }) => {
             6: 'text-xs'
           }
 
+          // Calculate indentation based on heading level
+          const indentMap = {
+            1: 'pl-0',
+            2: 'pl-0',
+            3: 'pl-4 md:pl-6',
+            4: 'pl-8 md:pl-12',
+            5: 'pl-12 md:pl-16',
+            6: 'pl-16 md:pl-20'
+          }
+
           return (
-            <div key={idx} className={`${headingClasses[item.level] || 'text-lg'} font-semibold text-white mt-2 mb-1 border-b border-purple-500/30 pb-1`}>
+            <div key={idx} className={`${indentMap[item.level] || 'pl-0'} ${headingClasses[item.level] || 'text-lg'} font-semibold text-white mt-3 mb-1.5 border-b border-purple-500/30 pb-1`}>
               {renderFormattedText(item.content)}
             </div>
           )
@@ -121,7 +131,7 @@ export const FormattedResponseContent = ({ text }) => {
         // Handle standalone headers
         if (item.type === 'header') {
           return (
-            <h2 key={idx} className="text-lg font-semibold text-white mt-2 mb-1 border-b border-purple-500/30 pb-1">
+            <h2 key={idx} className="text-lg font-semibold text-white mt-3 mb-1.5 border-b border-purple-500/30 pb-1 pl-4 md:pl-6">
               {renderFormattedText(item.content)}
             </h2>
           )
@@ -130,7 +140,7 @@ export const FormattedResponseContent = ({ text }) => {
         // Handle numbered lists
         if (item.type === 'list') {
           return (
-            <ol key={idx} className="space-y-1 ml-6 text-white">
+            <ol key={idx} className="space-y-1 ml-6 pl-4 md:pl-6 text-white">
               {item.items.map((listItem, listIdx) => (
                 <li key={listIdx} className="text-sm leading-snug" style={{
                   textAlign: 'justify',
@@ -152,20 +162,16 @@ export const FormattedResponseContent = ({ text }) => {
         // Handle regular paragraphs
         if (item.type === 'paragraph') {
           return (
-            <p
-              key={idx}
-              className="text-sm text-white leading-relaxed"
-              style={{
-                textAlign: 'justify',
-                textAlignLast: 'left',
-                wordSpacing: '0.05em',
-                letterSpacing: '0.3px',
-                lineHeight: '2',
-                hyphens: 'none',
-                overflowWrap: 'break-word',
-                wordBreak: 'break-word'
-              }}
-            >
+            <p key={idx} className="text-sm leading-snug text-gray-200 pl-4 md:pl-6" style={{
+              textAlign: 'justify',
+              textAlignLast: 'left',
+              wordSpacing: '0.05em',
+              letterSpacing: '0.3px',
+              lineHeight: '1.4',
+              hyphens: 'none',
+              overflowWrap: 'break-word',
+              wordBreak: 'break-word'
+            }}>
               {renderFormattedText(item.content)}
             </p>
           )
