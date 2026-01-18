@@ -412,6 +412,84 @@ export function smartFormatText(text) {
     const headingsWithIndices = extractHeadingsWithIndices(processText)
     const lines = processText.split('\n')
     
+    // IMPORTANT: Process content BEFORE the first heading
+    if (headingsWithIndices.length > 0 && headingsWithIndices[0].lineIdx > 0) {
+      const beforeFirstHeadingLines = lines.slice(0, headingsWithIndices[0].lineIdx)
+      const beforeFirstHeadingText = beforeFirstHeadingLines.join('\n').trim()
+      
+      if (beforeFirstHeadingText) {
+        // Process this content as paragraphs and bullets
+        const contentParts = []
+        let currentParagraph = []
+        
+        beforeFirstHeadingLines.forEach(line => {
+          const trimmedLine = line.trim()
+          
+          if (/^[-*+]\s+/.test(trimmedLine)) {
+            // Bullet point
+            if (currentParagraph.length > 0) {
+              const paraText = currentParagraph.join('\n').trim()
+              if (paraText) {
+                contentParts.push({
+                  type: 'paragraph',
+                  content: paraText
+                })
+              }
+              currentParagraph = []
+            }
+            
+            const bulletText = trimmedLine.replace(/^[-*+]\s+/, '').trim()
+            contentParts.push({
+              type: 'bullet',
+              content: bulletText
+            })
+          } else if (trimmedLine) {
+            currentParagraph.push(line)
+          }
+        })
+        
+        if (currentParagraph.length > 0) {
+          const paraText = currentParagraph.join('\n').trim()
+          if (paraText) {
+            contentParts.push({
+              type: 'paragraph',
+              content: paraText
+            })
+          }
+        }
+        
+        // Add content parts to result
+        let bulletGroup = []
+        contentParts.forEach(part => {
+          if (part.type === 'bullet') {
+            bulletGroup.push({
+              content: applyBoldFormatting(part.content)
+            })
+          } else {
+            if (bulletGroup.length > 0) {
+              result.push({
+                type: 'nested_bullets',
+                items: bulletGroup
+              })
+              bulletGroup = []
+            }
+            
+            result.push({
+              type: 'paragraph',
+              content: applyBoldFormatting(part.content)
+            })
+          }
+        })
+        
+        if (bulletGroup.length > 0) {
+          result.push({
+            type: 'nested_bullets',
+            items: bulletGroup
+          })
+        }
+      }
+    }
+    
     // Process each heading and its associated content
     headingsWithIndices.forEach((heading, headingIdx) => {
       // Add the heading
