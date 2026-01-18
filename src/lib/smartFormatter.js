@@ -573,83 +573,102 @@ export function smartFormatText(text) {
       const contentText = contentLines.join('\n').trim()
       
       if (contentText) {
-        // Split content into bullet points and regular text
-        const contentParts = []
-        let currentParagraph = []
+        // Check if this section contains a numbered list
+        const hasNumberedListInSection = hasNumberedList(contentText)
         
-        contentLines.forEach(line => {
-          const trimmedLine = line.trim()
-          
-          // Check if it's a bullet point
-          if (/^[-*+]\s+/.test(trimmedLine)) {
-            // If we have accumulated paragraph text, add it first
-            if (currentParagraph.length > 0) {
-              const paraText = currentParagraph.join('\n').trim()
-              if (paraText) {
-                contentParts.push({
-                  type: 'paragraph',
-                  content: paraText
-                })
-              }
-              currentParagraph = []
-            }
-            
-            // Extract bullet point text
-            const bulletText = trimmedLine.replace(/^[-*+]\s+/, '').trim()
-            contentParts.push({
-              type: 'bullet',
-              content: bulletText
-            })
-          } else if (trimmedLine) {
-            // Regular text line
-            currentParagraph.push(line)
-          }
-        })
-        
-        // Add any remaining paragraph text
-        if (currentParagraph.length > 0) {
-          const paraText = currentParagraph.join('\n').trim()
-          if (paraText) {
-            contentParts.push({
-              type: 'paragraph',
-              content: paraText
-            })
-          }
-        }
-        
-        // Add content parts to result
-        let bulletGroup = []
-        contentParts.forEach(part => {
-          if (part.type === 'bullet') {
-            bulletGroup.push({
-              content: applyBoldFormatting(part.content)
-            })
-          } else {
-            // If we have accumulated bullets, add them as a group
-            if (bulletGroup.length > 0) {
-              result.push({
-                type: 'nested_bullets',
-                items: bulletGroup
-              })
-              bulletGroup = []
-            }
-            
-            // Add the paragraph with heading context
+        if (hasNumberedListInSection) {
+          // Extract and process numbered list
+          const listItems = extractListItems(contentText)
+          if (listItems.length > 0) {
             result.push({
-              type: 'paragraph',
-              content: applyBoldFormatting(part.content),
+              type: 'list',
+              items: listItems.map(item => ({
+                number: item.number,
+                content: applyBoldFormatting(item.content)
+              })),
               headingLevel: heading.level
             })
           }
-        })
-        
-        // Add any remaining bullets
-        if (bulletGroup.length > 0) {
-          result.push({
-            type: 'nested_bullets',
-            items: bulletGroup,
-            headingLevel: heading.level
+        } else {
+          // Split content into bullet points and regular text
+          const contentParts = []
+          let currentParagraph = []
+          
+          contentLines.forEach(line => {
+            const trimmedLine = line.trim()
+            
+            // Check if it's a bullet point
+            if (/^[-*+]\s+/.test(trimmedLine)) {
+              // If we have accumulated paragraph text, add it first
+              if (currentParagraph.length > 0) {
+                const paraText = currentParagraph.join('\n').trim()
+                if (paraText) {
+                  contentParts.push({
+                    type: 'paragraph',
+                    content: paraText
+                  })
+                }
+                currentParagraph = []
+              }
+              
+              // Extract bullet point text
+              const bulletText = trimmedLine.replace(/^[-*+]\s+/, '').trim()
+              contentParts.push({
+                type: 'bullet',
+                content: bulletText
+              })
+            } else if (trimmedLine) {
+              // Regular text line
+              currentParagraph.push(line)
+            }
           })
+          
+          // Add any remaining paragraph text
+          if (currentParagraph.length > 0) {
+            const paraText = currentParagraph.join('\n').trim()
+            if (paraText) {
+              contentParts.push({
+                type: 'paragraph',
+                content: paraText
+              })
+            }
+          }
+        
+          // Add content parts to result
+          let bulletGroup = []
+          contentParts.forEach(part => {
+            if (part.type === 'bullet') {
+              bulletGroup.push({
+                content: applyBoldFormatting(part.content)
+              })
+            } else {
+              // If we have accumulated bullets, add them as a group
+              if (bulletGroup.length > 0) {
+                result.push({
+                  type: 'nested_bullets',
+                  items: bulletGroup,
+                  headingLevel: heading.level
+                })
+                bulletGroup = []
+              }
+              
+              // Add the paragraph with heading context
+              result.push({
+                type: 'paragraph',
+                content: applyBoldFormatting(part.content),
+                headingLevel: heading.level
+              })
+            }
+          })
+          
+          // Add any remaining bullets
+          if (bulletGroup.length > 0) {
+            result.push({
+              type: 'nested_bullets',
+              items: bulletGroup,
+              headingLevel: heading.level
+            })
+          }
         }
       }
     })
