@@ -162,8 +162,10 @@ function hasNumberedList(text) {
  * Extract numbered list items
  */
 function extractListItems(text) {
-  const lines = text.split('\n')
   const items = []
+  
+  // First try to extract from separate lines
+  const lines = text.split('\n')
   
   lines.forEach(line => {
     const trimmedLine = line.trim()
@@ -175,6 +177,30 @@ function extractListItems(text) {
       })
     }
   })
+  
+  // If no items found in separate lines, try to extract from continuous paragraph
+  if (items.length === 0) {
+    // Match pattern like "1. Item One 2. Item Two 3. Item Three"
+    const regex = /(\d{1,2})\.\s+([^\d]+?)(?=\d{1,2}\.|$)/g
+    let match
+    
+    while ((match = regex.exec(text)) !== null) {
+      const number = match[1]
+      let content = match[2].trim()
+      
+      // Remove trailing period if it's the last item
+      if (content.endsWith('.')) {
+        content = content.slice(0, -1).trim()
+      }
+      
+      if (content.length > 0) {
+        items.push({
+          number: number,
+          content: content
+        })
+      }
+    }
+  }
   
   return items
 }
