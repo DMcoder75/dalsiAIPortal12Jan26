@@ -140,7 +140,7 @@ export const FormattedResponseContent = ({ text }) => {
         // Handle numbered lists
         if (item.type === 'list') {
           return (
-            <ol key={idx} className="space-y-2 ml-6 pl-4 md:pl-6 text-white">
+            <ol key={idx} className="space-y-2 pl-8 md:pl-12 text-white">
               {item.items.map((listItem, listIdx) => {
                 // Check if this is a sub-item (e.g., 1.1, 2.3)
                 const isSubItem = listItem.number && listItem.number.toString().includes('.')

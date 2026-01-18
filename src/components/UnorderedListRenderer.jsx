@@ -72,7 +72,7 @@ export const UnorderedListRenderer = ({ items }) => {
     if (currentLevelItems.length === 0) return null
 
     return (
-      <ul className={`space-y-2 ${level > 0 ? 'ml-6 mt-2' : ''}`}>
+      <ul className={`space-y-2 ${level > 0 ? 'pl-6 md:pl-8 mt-2' : ''}`}>
         {currentLevelItems.map((item, idx) => (
           <li key={idx} className="text-sm text-white leading-relaxed">
             <span className="flex items-start gap-2">
