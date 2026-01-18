@@ -511,7 +511,8 @@ export function smartFormatText(text) {
             
             result.push({
               type: 'paragraph',
-              content: applyBoldFormatting(part.content)
+              content: applyBoldFormatting(part.content),
+              headingLevel: heading.level
             })
           }
         })
@@ -605,10 +606,11 @@ export function smartFormatText(text) {
               bulletGroup = []
             }
             
-            // Add the paragraph
+            // Add the paragraph with heading context
             result.push({
               type: 'paragraph',
-              content: applyBoldFormatting(part.content)
+              content: applyBoldFormatting(part.content),
+              headingLevel: heading.level
             })
           }
         })

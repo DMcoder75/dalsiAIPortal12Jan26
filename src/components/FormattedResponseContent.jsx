@@ -254,8 +254,27 @@ export const FormattedResponseContent = ({ text }) => {
 
         // Handle regular paragraphs
         if (item.type === 'paragraph') {
+          // Use headingLevel if available, otherwise look back for parent heading
+          let headingLevel = item.headingLevel || 3
+          if (!item.headingLevel) {
+            for (let i = idx - 1; i >= 0; i--) {
+              if (formattedItems[i].type === 'heading') {
+                headingLevel = formattedItems[i].level
+                break
+              }
+            }
+          }
+          
+          // Indent paragraphs based on heading level
+          const paragraphIndentMap = {
+            3: 'pl-8 md:pl-12',
+            4: 'pl-12 md:pl-16',
+            5: 'pl-16 md:pl-20',
+            6: 'pl-20 md:pl-24'
+          }
+          
           return (
-            <p key={idx} className="text-sm leading-snug text-gray-200 pl-6 md:pl-8" style={{
+            <p key={idx} className={`text-sm leading-snug text-gray-200 ${paragraphIndentMap[headingLevel] || 'pl-8 md:pl-12'}`} style={{
               textAlign: 'justify',
               textAlignLast: 'left',
               wordSpacing: '0.05em',
