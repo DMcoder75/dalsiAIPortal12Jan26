@@ -276,6 +276,7 @@ function hasMarkdownHeadings(text) {
 
 /**
  * Extract Markdown headings with levels and line indices
+ * Intelligently infers heading hierarchy when all headings are at same level
  */
 function extractHeadingsWithIndices(text) {
   const lines = text.split('\n')
@@ -291,6 +292,40 @@ function extractHeadingsWithIndices(text) {
       })
     }
   })
+  
+  // Intelligent hierarchy inference: if all headings are same level, infer proper levels
+  if (headings.length > 1) {
+    const allSameLevel = headings.every(h => h.level === headings[0].level)
+    
+    if (allSameLevel) {
+      // Analyze content patterns to infer hierarchy
+      headings.forEach((heading, idx) => {
+        const content = heading.content.toLowerCase()
+        const contentLength = heading.content.length
+        
+        // Check if numbered main section (1., 2., 3., etc.)
+        const isNumberedMain = /^\d+\./.test(heading.content)
+        
+        // Check if subsection (contains and/or, short length)
+        const isSubsection = (content.includes(' and ') || content.includes(' or ')) && contentLength < 50
+        
+        // Check if detail (contains colon or very short)
+        const isDetail = content.includes(':') || contentLength < 30
+        
+        if (isNumberedMain) {
+          heading.level = 3
+        } else if (isSubsection && idx > 0) {
+          heading.level = 4
+        } else if (isDetail && idx > 0) {
+          heading.level = 5
+        } else if (idx === 0) {
+          heading.level = 3
+        } else {
+          heading.level = 4
+        }
+      })
+    }
+  }
   
   return headings
 }

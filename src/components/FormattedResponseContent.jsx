@@ -140,8 +140,25 @@ export const FormattedResponseContent = ({ text }) => {
 
         // Handle nested bullet points under headings
         if (item.type === 'nested_bullets') {
+          // Get the previous heading to determine indentation level
+          let headingLevel = 3
+          for (let i = idx - 1; i >= 0; i--) {
+            if (formattedItems[i].type === 'heading') {
+              headingLevel = formattedItems[i].level
+              break
+            }
+          }
+          
+          // Indent bullets based on parent heading level
+          const bulletIndentMap = {
+            3: 'pl-12 md:pl-16',
+            4: 'pl-16 md:pl-20',
+            5: 'pl-20 md:pl-24',
+            6: 'pl-24 md:pl-28'
+          }
+          
           return (
-            <div key={idx} className="space-y-1 pl-6 md:pl-8 text-white">
+            <div key={idx} className={`space-y-1 ${bulletIndentMap[headingLevel] || 'pl-12 md:pl-16'} text-white`}>
               {item.items.map((bulletItem, bulletIdx) => (
                 <div
                   key={bulletIdx}
@@ -253,59 +270,12 @@ export const FormattedResponseContent = ({ text }) => {
           )
         }
 
-        // Handle sections with header and content
-        if (item.type === 'section') {
-          return (
-            <div key={idx} className="space-y-4">
-              {/* Section Header */}
-              <h2 className="text-xl font-semibold text-white mt-6 mb-4 border-b border-purple-500/30 pb-3">
-                {renderFormattedText(item.header)}
-              </h2>
-
-              {/* Section Content - render each paragraph in the section */}
-              <div className="space-y-6">
-                {Array.isArray(item.content) ? (
-                  item.content.map((para, paraIdx) => (
-                    <p
-                      key={paraIdx}
-                      className="text-sm text-white leading-relaxed"
-                      style={{
-                        textAlign: 'justify',
-                        textAlignLast: 'left',
-                        wordSpacing: '0.05em',
-                        letterSpacing: '0.3px',
-                        lineHeight: '2',
-                        hyphens: 'none',
-                        overflowWrap: 'break-word',
-                        wordBreak: 'break-word'
-                      }}
-                    >
-                      {renderFormattedText(para)}
-                    </p>
-                  ))
-                ) : (
-                  <p
-                    className="text-sm text-white leading-relaxed"
-                    style={{
-                      textAlign: 'justify',
-                      textAlignLast: 'left',
-                      wordSpacing: '0.05em',
-                      letterSpacing: '0.3px',
-                      lineHeight: '2',
-                      hyphens: 'none',
-                      overflowWrap: 'break-word',
-                      wordBreak: 'break-word'
-                    }}
-                  >
-                    {renderFormattedText(item.content)}
-                  </p>
-                )}
-              </div>
-            </div>
-          )
-        }
-
-        return null
+        // Fallback for unknown types
+        return (
+          <div key={idx} className="text-sm text-gray-300">
+            {JSON.stringify(item)}
+          </div>
+        )
       })}
     </div>
   )
