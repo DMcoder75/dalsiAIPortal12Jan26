@@ -147,7 +147,7 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
 
       {/* Thicker Separator before Follow-up Questions */}
       {followups && followups.length > 0 && (
-        <div className="my-6 h-0.5 bg-gradient-to-r from-purple-500/40 via-purple-500/30 to-transparent"></div>
+        <div style={{height: '2px', backgroundColor: '#a78bfa', marginTop: '24px', marginBottom: '24px'}} className="w-full"></div>
       )}
 
       {/* Follow-up Questions Section - Improved Design */}
