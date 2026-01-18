@@ -49,34 +49,6 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
 
   return (
     <div className="space-y-4">
-      {/* Action Buttons */}
-      <div className="flex justify-end gap-2 mb-2">
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1 px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
-          title="Copy response"
-        >
-          <Copy className="w-3 h-3" />
-          {copied ? 'Copied!' : 'Copy'}
-        </button>
-        <button
-          onClick={handleSpeak}
-          className="flex items-center gap-1 px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
-          title="Speak response"
-        >
-          <Volume2 className="w-3 h-3" />
-          {isSpeaking ? 'Stop' : 'Speak'}
-        </button>
-        <button
-          onClick={handleDownload}
-          className="flex items-center gap-1 px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
-          title="Download response"
-        >
-          <Download className="w-3 h-3" />
-          Download
-        </button>
-      </div>
-
       {/* Main Response */}
       <div className="prose prose-sm max-w-none dark:prose-invert">
         {typeof response === 'object' && response.$$typeof ? (
@@ -149,8 +121,44 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
       {followups && followups.length > 0 && (
         <div style={{height: '2px', backgroundColor: '#a78bfa', marginTop: '24px', marginBottom: '24px'}} className="w-full"></div>
       )}
+      
+      {/* Action Buttons - Bottom Right */}
+      <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-purple-500/10">
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1 px-3 py-1.5 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
+          title="Copy response"
+        >
+          <Copy className="w-3 h-3" />
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
+        <button
+          onClick={handleSpeak}
+          className="flex items-center gap-1 px-3 py-1.5 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
+          title="Speak response"
+        >
+          <Volume2 className="w-3 h-3" />
+          {isSpeaking ? 'Stop' : 'Speak'}
+        </button>
+        <button
+          onClick={handleDownload}
+          className="flex items-center gap-1 px-3 py-1.5 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded transition-colors"
+          title="Download response"
+        >
+          <Download className="w-3 h-3" />
+          Download
+        </button>
+      </div>
+    </div>
+  )
+}
 
-      {/* Follow-up Questions Section - Improved Design */}
+/**
+ * Follow-up Questions Section - Improved Design
+ */
+const FollowupQuestionsSection = ({ followups, onFollowupClick }) => {
+  return (
+    <div>
       {followups && followups.length > 0 && (
         <div className="mt-6">
           <div className="flex items-center gap-2 mb-4">
