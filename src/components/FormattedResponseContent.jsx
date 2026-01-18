@@ -47,13 +47,13 @@ export const FormattedResponseContent = ({ text }) => {
   })
 
   return (
-    <div className="space-y-1.5 text-white">
+    <div className="space-y-3 text-white">
       {/* DalsiAI Header */}
-      <div className="flex items-center gap-3 pb-3 border-b border-purple-500/30">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-5 h-5 text-white" />
+      <div className="flex items-center gap-4 pb-4 border-b border-purple-500/30">
+        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+          <Sparkles className="w-6 h-6 text-white" />
         </div>
-        <span className="text-base font-bold text-white tracking-wide">DalsiAI</span>
+        <span className="text-lg font-bold text-white tracking-wide">DalsiAI</span>
       </div>
 
       {/* Response Content */}
@@ -122,7 +122,7 @@ export const FormattedResponseContent = ({ text }) => {
           }
 
           return (
-            <div key={idx} className={`${indentMap[item.level] || 'pl-0'} ${headingClasses[item.level] || 'text-lg'} font-semibold text-white mt-3 mb-1.5 border-b border-purple-500/30 pb-1`}>
+            <div key={idx} className={`${indentMap[item.level] || 'pl-0'} ${headingClasses[item.level] || 'text-lg'} font-semibold text-white mt-4 mb-2 border-b border-purple-500/30 pb-1.5`}>
               {renderFormattedText(item.content)}
             </div>
           )
@@ -140,19 +140,19 @@ export const FormattedResponseContent = ({ text }) => {
         // Handle numbered lists
         if (item.type === 'list') {
           return (
-            <ol key={idx} className="space-y-1 ml-6 pl-4 md:pl-6 text-white">
+            <ol key={idx} className="space-y-2 ml-6 pl-4 md:pl-6 text-white">
               {item.items.map((listItem, listIdx) => {
                 // Check if this is a sub-item (e.g., 1.1, 2.3)
                 const isSubItem = listItem.number && listItem.number.toString().includes('.')
                 const subItemIndent = isSubItem ? 'pl-4 md:pl-6' : 'pl-0'
                 
                 return (
-                  <li key={listIdx} className={`text-sm leading-snug ${subItemIndent}`} style={{
+                  <li key={listIdx} className={`text-sm leading-relaxed ${subItemIndent}`} style={{
                     textAlign: 'justify',
                     textAlignLast: 'left',
                     wordSpacing: '0.05em',
                     letterSpacing: '0.3px',
-                    lineHeight: '1.4',
+                    lineHeight: '1.6',
                     hyphens: 'none',
                     overflowWrap: 'break-word',
                     wordBreak: 'break-word'
@@ -168,12 +168,12 @@ export const FormattedResponseContent = ({ text }) => {
         // Handle regular paragraphs
         if (item.type === 'paragraph') {
           return (
-            <p key={idx} className="text-sm leading-snug text-gray-200 pl-4 md:pl-6" style={{
+            <p key={idx} className="text-sm leading-relaxed text-gray-200 pl-6 md:pl-8" style={{
               textAlign: 'justify',
               textAlignLast: 'left',
               wordSpacing: '0.05em',
               letterSpacing: '0.3px',
-              lineHeight: '1.4',
+              lineHeight: '1.6',
               hyphens: 'none',
               overflowWrap: 'break-word',
               wordBreak: 'break-word'
