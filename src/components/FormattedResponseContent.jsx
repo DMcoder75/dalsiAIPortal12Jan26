@@ -226,8 +226,27 @@ export const FormattedResponseContent = ({ text }) => {
 
         // Handle numbered lists
         if (item.type === 'list') {
+          // Use headingLevel if available, otherwise look back for parent heading
+          let headingLevel = item.headingLevel || 3
+          if (!item.headingLevel) {
+            for (let i = idx - 1; i >= 0; i--) {
+              if (formattedItems[i].type === 'heading') {
+                headingLevel = formattedItems[i].level
+                break
+              }
+            }
+          }
+          
+          // Indent lists based on heading level (same as nested_bullets)
+          const listIndentMap = {
+            3: 'pl-12 md:pl-16',
+            4: 'pl-16 md:pl-20',
+            5: 'pl-20 md:pl-24',
+            6: 'pl-24 md:pl-28'
+          }
+          
           return (
-            <ol key={idx} className="space-y-1 ml-6 pl-4 md:pl-6 text-white">
+            <ol key={idx} className={`space-y-1 ${listIndentMap[headingLevel] || 'pl-12 md:pl-16'} text-white`}>
               {item.items.map((listItem, listIdx) => {
                 // Check if this is a sub-item (e.g., 1.1, 2.3)
                 const isSubItem = listItem.number && listItem.number.toString().includes('.')
