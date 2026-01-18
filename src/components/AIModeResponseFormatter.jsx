@@ -117,9 +117,14 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
         </div>
       )}
 
+      {/* Thick Separator before Follow-up Questions */}
+      {followups && followups.length > 0 && (
+        <div style={{height: '2px', backgroundColor: '#a78bfa', marginTop: '24px', marginBottom: '24px'}} className="w-full"></div>
+      )}
+      
       {/* Follow-up Questions Section */}
       {followups && followups.length > 0 && (
-        <div className="mt-6">
+        <div className="mt-0">
           <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4 text-purple-400" />
@@ -147,18 +152,11 @@ export const ChatModeResponse = ({ response, references, followups, onFollowupCl
                   </div>
                 </button>
                 
-                {idx < followups.length - 1 && (
-                  <div style={{height: '1px', backgroundColor: '#a78bfa', opacity: 0.6}} className="w-full"></div>
-                )}
+                <div style={{height: '1px', backgroundColor: '#a78bfa', opacity: 0.6}} className="w-full"></div>
               </div>
             ))}
           </div>
         </div>
-      )}
-      
-      {/* Thicker Separator before Action Buttons */}
-      {followups && followups.length > 0 && (
-        <div style={{height: '2px', backgroundColor: '#a78bfa', marginTop: '24px', marginBottom: '24px'}} className="w-full"></div>
       )}
       
       {/* Action Buttons - Bottom Right */}
