@@ -511,8 +511,7 @@ export function smartFormatText(text) {
             
             result.push({
               type: 'paragraph',
-              content: applyBoldFormatting(part.content),
-              headingLevel: heading.level
+              content: applyBoldFormatting(part.content)
             })
           }
         })
@@ -619,7 +618,8 @@ export function smartFormatText(text) {
         if (bulletGroup.length > 0) {
           result.push({
             type: 'nested_bullets',
-            items: bulletGroup
+            items: bulletGroup,
+            headingLevel: heading.level
           })
         }
       }
